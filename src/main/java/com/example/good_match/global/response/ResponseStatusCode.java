@@ -1,4 +1,4 @@
-package com.example.good_match.domain.member.model;
+package com.example.good_match.global.response;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

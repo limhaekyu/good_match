@@ -16,8 +16,8 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping("/user")
+    @PostMapping("/sign-up")
     public ApiResponseDto signUp(@RequestBody SignUpRequestDto signUpRequestDto){
-        return memberService.signUpember(signUpRequestDto);
+        return memberService.signUpMember(signUpRequestDto);
     }
 }

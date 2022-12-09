@@ -2,7 +2,8 @@ package com.example.good_match.domain.member.service;
 
 import com.example.good_match.domain.member.dto.request.SignUpRequestDto;
 import com.example.good_match.domain.member.model.Member;
-import com.example.good_match.domain.member.model.ResponseStatusCode;
+import com.example.good_match.domain.member.model.Role;
+import com.example.good_match.global.response.ResponseStatusCode;
 import com.example.good_match.domain.member.repository.MemberRepository;
 import com.example.good_match.global.response.ApiResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +20,8 @@ public class MemberService {
     // 회원가입
 
     @Transactional
-    public ApiResponseDto signUpember(SignUpRequestDto signUpRequestDto) {
+    public ApiResponseDto signUpMember(SignUpRequestDto signUpRequestDto) {
         try {
-
             String password = passwordEncoder.encode(signUpRequestDto.getPassword());
 
             Member member = Member.builder()
@@ -30,7 +30,10 @@ public class MemberService {
                     .name(signUpRequestDto.getName())
                     .phoneNumber(signUpRequestDto.getPhoneNumber())
                     .email(signUpRequestDto.getEmail())
+                    .gender(signUpRequestDto.getGender())
+                    .role(Role.USER)
                     .build();
+
             memberRepository.save(member);
 
             return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "회원가입에 성공했습니다");

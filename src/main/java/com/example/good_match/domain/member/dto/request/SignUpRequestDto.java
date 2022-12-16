@@ -11,15 +11,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 public class SignUpRequestDto {
-    private String id;
+    private String email;
 
     private String password;
 
     private String name;
 
     private String phoneNumber;
-
-    private String email;
 
     private Gender gender;
 }

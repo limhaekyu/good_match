@@ -1,5 +1,9 @@
 package com.example.good_match.global.config;
 
+import com.example.good_match.global.security.jwt.JwtAccessDeniedHandler;
+import com.example.good_match.global.security.jwt.JwtAuthenticationEntryPoint;
+import com.example.good_match.global.security.jwt.TokenProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,7 +18,16 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final TokenProvider tokenProvider;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -31,6 +44,19 @@ public class SecurityConfig {
                             return cors;
                         }
                 )
+
+                // exception handling
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .accessDeniedHandler(jwtAccessDeniedHandler)
+
+                .and()
+                .headers()
+                .frameOptions()
+                .sameOrigin()
+
+                // session 사용 안함
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -38,14 +64,16 @@ public class SecurityConfig {
                 .formLogin().disable()
                 .httpBasic().disable()
                 .authorizeRequests()
-                .anyRequest().permitAll();
+                .antMatchers("/api/login").permitAll()
+                .antMatchers("/api/sign-up").permitAll()
+                .anyRequest().permitAll()
+
+                // JwtSecurityConfig 클래스를 적용
+                .and()
+                .apply(new JwtSecurityConfig(tokenProvider));
 
         return http.build();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-        return encoder;
-    }
+
 }

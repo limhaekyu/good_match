@@ -5,7 +5,6 @@ import com.example.good_match.domain.member.dto.request.ReissueRequestDto;
 import com.example.good_match.domain.member.dto.request.SignUpRequestDto;
 import com.example.good_match.domain.member.model.Authority;
 import com.example.good_match.domain.member.model.Member;
-import com.example.good_match.domain.member.model.RefreshToken;
 import com.example.good_match.domain.member.repository.MemberRepository;
 import com.example.good_match.domain.member.repository.RefreshTokenRedisRepository;
 import com.example.good_match.global.response.ApiResponseDto;
@@ -78,11 +77,6 @@ public class MemberService {
                     tokenDto.getRefreshTokenExpiresIn(),
                     TimeUnit.MILLISECONDS
             );
-//
-//            refreshTokenRedisRepository.save(RefreshToken.builder()
-//                            .refreshToken(tokenDto.getRefreshToken())
-//                            .memberId(Long.valueOf(authentication.getName()))
-//                    .build());
 
             return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "로그인 성공", tokenDto);
         } catch (Exception e) {
@@ -103,19 +97,23 @@ public class MemberService {
             Authentication authentication = tokenProvider.getAuthentication(reissueRequestDto.getAccessToken());
 
             // 저장소에서 MemberId 기반으로 Refresh token 값 가져옴
-            RefreshToken refreshToken = refreshTokenRedisRepository.findByMemberId(Long.valueOf(authentication.getName()))
-                    .orElseThrow( () -> new RuntimeException("로그아웃 된 사용자입니다."));
+            String refreshToken = redisTemplate.opsForValue().get(authentication.getName());
 
             // Refresh token이 일치하는지 검사
-            if (!refreshToken.getRefreshToken().equals(reissueRequestDto.getRefreshToken())) {
+            if (!refreshToken.equals(reissueRequestDto.getRefreshToken())) {
                 throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
             }
+
             // 새로운 토큰 생성
             TokenDto newToken = tokenProvider.generateTokenDto(authentication);
 
             // 저장소 정보 업데이트
-            refreshToken.updateValue(newToken.getRefreshToken());
-            refreshTokenRedisRepository.save(refreshToken);
+            redisTemplate.opsForValue().set(
+                    authentication.getName(),
+                    newToken.getRefreshToken(),
+                    newToken.getRefreshTokenExpiresIn(),
+                    TimeUnit.MILLISECONDS
+            );
 
             return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "Access Token 재발급 완료", newToken);
         } catch (Exception e) {

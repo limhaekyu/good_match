@@ -8,7 +8,6 @@ import com.example.good_match.domain.member.dto.response.FindIdResponseDto;
 import com.example.good_match.domain.member.model.Authority;
 import com.example.good_match.domain.member.model.Member;
 import com.example.good_match.domain.member.repository.MemberRepository;
-import com.example.good_match.domain.member.repository.RefreshTokenRedisRepository;
 import com.example.good_match.global.response.ApiResponseDto;
 import com.example.good_match.global.response.ResponseStatusCode;
 import com.example.good_match.global.security.jwt.TokenProvider;
@@ -31,7 +30,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TokenProvider tokenProvider;
-    private final RefreshTokenRedisRepository refreshTokenRedisRepository;
+
     private final RedisTemplate<String, String> redisTemplate;
     // 회원가입
 
@@ -75,9 +74,7 @@ public class MemberService {
             // redis에 refreshToken 저장하는것 필요
             redisTemplate.opsForValue().set(
                     authentication.getName(),
-                    tokenDto.getRefreshToken(),
-                    tokenDto.getRefreshTokenExpiresIn(),
-                    TimeUnit.MILLISECONDS
+                    tokenDto.getRefreshToken()
             );
 
             return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "로그인 성공", tokenDto);
@@ -112,9 +109,7 @@ public class MemberService {
             // 저장소 정보 업데이트
             redisTemplate.opsForValue().set(
                     authentication.getName(),
-                    newToken.getRefreshToken(),
-                    newToken.getRefreshTokenExpiresIn(),
-                    TimeUnit.MILLISECONDS
+                    newToken.getRefreshToken()
             );
 
             return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "Access Token 재발급 완료", newToken);

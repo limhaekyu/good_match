@@ -66,7 +66,9 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/api/login").permitAll()
                 .antMatchers("/api/sign-up").permitAll()
-                .anyRequest().permitAll()
+                .antMatchers("/api/reissue").permitAll()
+                .antMatchers("/api/find-id").permitAll()
+                .anyRequest().authenticated()
 
                 // JwtSecurityConfig 클래스를 적용
                 .and()

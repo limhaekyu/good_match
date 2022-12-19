@@ -64,10 +64,8 @@ public class SecurityConfig {
                 .formLogin().disable()
                 .httpBasic().disable()
                 .authorizeRequests()
-                .antMatchers("/api/login").permitAll()
-                .antMatchers("/api/sign-up").permitAll()
-                .antMatchers("/api/reissue").permitAll()
-                .antMatchers("/api/find-id").permitAll()
+                .antMatchers("/","/swagger-resources/**","/swagger-ui/**", "/v3/api-docs").permitAll()
+                .antMatchers("/api/login","/api/sign-up","/api/reissue","/api/find-id").permitAll()
                 .anyRequest().authenticated()
 
                 // JwtSecurityConfig 클래스를 적용

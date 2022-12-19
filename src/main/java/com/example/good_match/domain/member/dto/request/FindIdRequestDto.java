@@ -1,23 +1,13 @@
 package com.example.good_match.domain.member.dto.request;
 
-import com.example.good_match.domain.member.model.Gender;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Builder
-public class SignUpRequestDto {
-    private String email;
-
-    private String password;
-
+public class FindIdRequestDto {
     private String name;
-
     private String phoneNumber;
-
-    private Gender gender;
 }

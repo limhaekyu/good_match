@@ -1,6 +1,7 @@
 package com.example.good_match.domain.member.model;
 
 import com.example.good_match.domain.game.domain.Game;
+import com.example.good_match.global.util.StatesEnum;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,6 +44,9 @@ public class Member {
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")
     private Gender gender;
+
+    @Enumerated(EnumType.STRING)
+    private StatesEnum states;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "authority")

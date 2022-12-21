@@ -1,6 +1,7 @@
 package com.example.good_match.domain.game.domain;
 
 import com.example.good_match.domain.member.model.Member;
+import com.example.good_match.global.util.StatesEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,6 +31,9 @@ public class Game {
 
     @Column(name = "contents")
     private String contents;
+
+    @Enumerated(EnumType.STRING)
+    private StatesEnum states;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "game_status")

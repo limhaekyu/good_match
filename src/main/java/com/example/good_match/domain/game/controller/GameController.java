@@ -7,10 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -18,14 +15,20 @@ import java.security.Principal;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class GameController {
-    // 게시글 등록, 게시글 리스트 조회, 게시글 삭제, 게시글 수정
+    // 게시글 등록, 게시글 조회 상세 ,게시글 삭제, 게시글 수정
 
     private final GameService gameService;
 
-    @ApiOperation(value = "게임 등록")
+    @ApiOperation(value = "[매칭] 게임 게시글 등록")
     @PostMapping("/game")
     public ApiResponseDto addGame(@AuthenticationPrincipal User user, @RequestBody AddGameRequestDto addGameRequestDto) {
         return gameService.addGame(addGameRequestDto, user);
+    }
+
+    @ApiOperation(value = "[매칭] 게임 게시글 상세조회")
+    @GetMapping("/game/{id}")
+    public ApiResponseDto selectGameDetail(@PathVariable Long id){
+        return gameService.selectGameDetail(id);
     }
 
 

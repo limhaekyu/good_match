@@ -5,8 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @AllArgsConstructor
@@ -14,6 +18,7 @@ import javax.persistence.*;
 @Getter
 @Builder
 @Table(name = "game")
+@EntityListeners(AuditingEntityListener.class)
 public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +35,15 @@ public class Game {
     @Column(name = "game_status")
     private GameStatus gameStatus;
 
+    @CreatedDate
+    @Column(name = "created_at")
+    private Timestamp createdAt;
+
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private Timestamp updatedAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", insertable = false, updatable = false)
+    @JoinColumn(name = "member_id")
     private Member member;
 }

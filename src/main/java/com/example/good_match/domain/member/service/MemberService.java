@@ -17,6 +17,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +47,7 @@ public class MemberService {
                     .name(signUpRequestDto.getName())
                     .phoneNumber(signUpRequestDto.getPhoneNumber())
                     .gender(signUpRequestDto.getGender())
+                    .states(signUpRequestDto.getStates())
                     .authority(Authority.ROLE_USER)
                     .build();
 
@@ -130,5 +133,9 @@ public class MemberService {
         } catch (Exception e){
             return ApiResponseDto.of(ResponseStatusCode.FAIL.getValue(), "아이디 찾기에 실패했습니다. " + e.getMessage());
         }
+    }
+
+    public Member findMemberByJwt(User user) {
+        return memberRepository.findById(Long.valueOf(user.getUsername())).orElseThrow( () -> new UsernameNotFoundException("일치하는 유저가 없습니다.") );
     }
 }

@@ -1,6 +1,7 @@
 package com.example.good_match.domain.member.dto.request;
 
 import com.example.good_match.domain.member.model.Gender;
+import com.example.good_match.global.util.StatesEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,4 +21,6 @@ public class SignUpRequestDto {
     private String phoneNumber;
 
     private Gender gender;
+
+    private StatesEnum states;
 }

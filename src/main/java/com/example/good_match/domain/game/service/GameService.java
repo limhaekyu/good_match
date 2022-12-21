@@ -30,18 +30,18 @@ public class GameService {
                     .gameStatus(GameStatus.reservation_wait)
                     .member(memberService.findMemberByJwt(user))
                     .build());
-            return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "게임 등록을 성공했습니다. ");
+            return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "게임 매칭 게시글 등록을 성공했습니다. ");
         } catch (Exception e){
-            return ApiResponseDto.of(ResponseStatusCode.FAIL.getValue(), "게임 등록에 실패했습니다. " + e.getMessage());
+            return ApiResponseDto.of(ResponseStatusCode.FAIL.getValue(), "게임 매칭 게시글 등록에 실패했습니다. " + e.getMessage());
         }
     }
 
     @Transactional
     public ApiResponseDto selectGameDetail(Long id) {
         try {
-            Game game = gameRepository.findById(id).orElseThrow( ()-> new IllegalArgumentException("없는 게임 게시글입니다.") );
+            Game game = findGameById(id);
 
-            return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "게임 상세 조회에 성공했습니다.",
+            return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "게임 매칭 게시글 상세 조회에 성공했습니다.",
                     SelectGameDetailResponseDto.builder()
                             .title(game.getTitle())
                             .contents(game.getContents())
@@ -53,7 +53,26 @@ public class GameService {
                             .build()
             );
         } catch (Exception e) {
-            return ApiResponseDto.of(ResponseStatusCode.FAIL.getValue(), "게임 상세 조회에 실패했습니다. " + e.getMessage());
+            return ApiResponseDto.of(ResponseStatusCode.FAIL.getValue(), "게임 매칭 게시글 상세 조회에 실패했습니다. " + e.getMessage());
         }
+    }
+
+    @Transactional
+    public ApiResponseDto deleteGame(Long id, User user) {
+        try {
+            Game game = findGameById(id);
+            if (memberService.findMemberByJwt(user).equals(game.getMember())) {
+                gameRepository.delete(game);
+                return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "게임 매칭 게시글을 삭제했습니다.");
+            } else {
+                return ApiResponseDto.of(ResponseStatusCode.UNAUTHORIZED.getValue(), "해당 사용자의 게임 메칭 게시글이 아닙니다.");
+            }
+        } catch (Exception e) {
+            return ApiResponseDto.of(ResponseStatusCode.FAIL.getValue(), "게임 매칭 게시글을 삭제했습니다.. " + e.getMessage());
+        }
+    }
+
+    private Game findGameById(Long id) {
+        return gameRepository.findById(id).orElseThrow( ()-> new IllegalArgumentException("없는 게임 매칭 게시글입니다.") );
     }
 }

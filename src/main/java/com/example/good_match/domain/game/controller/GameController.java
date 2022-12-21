@@ -31,5 +31,11 @@ public class GameController {
         return gameService.selectGameDetail(id);
     }
 
+    @ApiOperation(value = "[매칭] 게임 게시글 삭제")
+    @DeleteMapping("/game/{id}")
+    public ApiResponseDto deleteGame(@PathVariable Long id, @AuthenticationPrincipal User user){
+        return gameService.deleteGame(id, user);
+    }
+
 
 }

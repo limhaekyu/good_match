@@ -9,7 +9,6 @@ import com.example.good_match.domain.game.repository.GameRepository;
 import com.example.good_match.domain.member.service.MemberService;
 import com.example.good_match.global.response.ApiResponseDto;
 import com.example.good_match.global.response.ResponseStatusCode;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;

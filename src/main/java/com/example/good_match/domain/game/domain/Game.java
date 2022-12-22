@@ -50,4 +50,10 @@ public class Game {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    public void updateGame(String title, String contents, StatesEnum states) {
+        this.title = title;
+        this.contents = contents;
+        this.states = states;
+    }
 }

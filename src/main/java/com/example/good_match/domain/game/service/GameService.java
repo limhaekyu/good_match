@@ -3,11 +3,13 @@ package com.example.good_match.domain.game.service;
 import com.example.good_match.domain.game.domain.Game;
 import com.example.good_match.domain.game.domain.GameStatus;
 import com.example.good_match.domain.game.dto.request.AddGameRequestDto;
+import com.example.good_match.domain.game.dto.request.UpdateGameRequestDto;
 import com.example.good_match.domain.game.dto.response.SelectGameDetailResponseDto;
 import com.example.good_match.domain.game.repository.GameRepository;
 import com.example.good_match.domain.member.service.MemberService;
 import com.example.good_match.global.response.ApiResponseDto;
 import com.example.good_match.global.response.ResponseStatusCode;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,9 @@ public class GameService {
     private final GameRepository gameRepository;
     private final MemberService memberService;
 
+    /*
+        [매칭] 게임 게시글 등록
+     */
     @Transactional
     public ApiResponseDto addGame(AddGameRequestDto addGameRequestDto, User user) {
         try{
@@ -36,6 +41,10 @@ public class GameService {
         }
     }
 
+
+    /*
+        [매칭] 게임 게시글 상세 조회
+     */
     @Transactional
     public ApiResponseDto selectGameDetail(Long id) {
         try {
@@ -57,11 +66,16 @@ public class GameService {
         }
     }
 
+
+    /*
+        [매칭] 게임 게시글 삭제
+     */
+
     @Transactional
     public ApiResponseDto deleteGame(Long id, User user) {
         try {
             Game game = findGameById(id);
-            if (memberService.findMemberByJwt(user).equals(game.getMember())) {
+            if (memberService.findMemberByJwt(user) == game.getMember() || user.getAuthorities().equals("ROLE_ADMIN")) {
                 gameRepository.delete(game);
                 return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "게임 매칭 게시글을 삭제했습니다.");
             } else {
@@ -72,7 +86,37 @@ public class GameService {
         }
     }
 
+
+    /*
+        [매칭] 게임 게시글 찾기 (with. index id)
+     */
+
     private Game findGameById(Long id) {
         return gameRepository.findById(id).orElseThrow( ()-> new IllegalArgumentException("없는 게임 매칭 게시글입니다.") );
     }
+
+    /*
+        [매칭] 게임 게시글 수정
+     */
+
+    @Transactional
+    public ApiResponseDto updateGame(Long id, UpdateGameRequestDto updateGameRequestDto, User user) {
+        try {
+            Game game = findGameById(id);
+
+            if (memberService.findMemberByJwt(user) == game.getMember() || user.getAuthorities().equals("ROLE_ADMIN")) {
+
+                game.updateGame(updateGameRequestDto.getTitle(), updateGameRequestDto.getContents(), updateGameRequestDto.getStates());
+                gameRepository.save(game);
+
+                return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "게임 매칭 게시글 수정을 완료했습니다.");
+            } else {
+                return ApiResponseDto.of(ResponseStatusCode.UNAUTHORIZED.getValue(), "수정 권한이 없습니다. ");
+            }
+
+        } catch (Exception e){
+            return ApiResponseDto.of(ResponseStatusCode.FAIL.getValue(), "게임 매칭 게시글 수정에 실패했습니다. " + e.getMessage());
+        }
+    }
+
 }

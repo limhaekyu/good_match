@@ -12,33 +12,33 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/board")
 public class BoardController {
     //게시글 수정
 
     private final BoardService boardService;
 
     @ApiOperation(value = "[매칭] 게임 게시글 등록")
-    @PostMapping("/game")
+    @PostMapping("")
     public ApiResponseDto addGame(@AuthenticationPrincipal User user, @RequestBody AddBoardRequestDto addBoardRequestDto) {
         return boardService.addGame(addBoardRequestDto, user);
     }
 
     @ApiOperation(value = "[매칭] 게임 게시글 상세조회")
-    @GetMapping("/game/{id}")
+    @GetMapping("/{id}")
     public ApiResponseDto selectGameDetail(@PathVariable Long id){
         return boardService.selectGameDetail(id);
     }
 
     @ApiOperation(value = "[매칭] 게임 게시글 삭제")
-    @DeleteMapping("/game/{id}")
+    @DeleteMapping("/{id}")
     public ApiResponseDto deleteGame(@PathVariable Long id, @AuthenticationPrincipal User user) {
         return boardService.deleteGame(id, user);
     }
 
     // 게시글 수정
     @ApiOperation(value = "[매칭] 게임 게시글 수정")
-    @PutMapping("/game/{id}")
+    @PutMapping("/{id}")
     public ApiResponseDto updateGame(@PathVariable Long id, @RequestBody UpdateBoardRequestDto updateBoardRequestDto, @AuthenticationPrincipal User user) {
         return boardService.updateGame(id, updateBoardRequestDto, user);
     }

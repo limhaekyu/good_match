@@ -1,6 +1,6 @@
-package com.example.good_match.domain.game.dto.response;
+package com.example.good_match.domain.board.dto.response;
 
-import com.example.good_match.domain.game.domain.GameStatus;
+import com.example.good_match.domain.board.domain.BoardStatus;
 import com.example.good_match.global.util.StatesEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,14 +13,14 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Getter
 @Builder
-public class SelectGameDetailResponseDto {
+public class SelectBoardDetailResponseDto {
     private String title;
 
     private String contents;
 
     private StatesEnum states;
 
-    private GameStatus gameStatus;
+    private BoardStatus boardStatus;
 
     private Timestamp updatedAt;
 

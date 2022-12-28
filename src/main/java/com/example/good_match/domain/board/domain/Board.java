@@ -1,4 +1,4 @@
-package com.example.good_match.domain.game.domain;
+package com.example.good_match.domain.board.domain;
 
 import com.example.good_match.domain.member.model.Member;
 import com.example.good_match.global.util.StatesEnum;
@@ -20,7 +20,7 @@ import java.sql.Timestamp;
 @Builder
 @Table(name = "game")
 @EntityListeners(AuditingEntityListener.class)
-public class Game {
+public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "game_id")
@@ -37,7 +37,7 @@ public class Game {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "game_status")
-    private GameStatus gameStatus;
+    private BoardStatus boardStatus;
 
     @CreatedDate
     @Column(name = "created_at")

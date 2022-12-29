@@ -1,5 +1,7 @@
 package com.example.good_match.domain.board.domain;
 
+import com.example.good_match.domain.category.model.Category;
+import com.example.good_match.domain.category.model.SubCategory;
 import com.example.good_match.domain.member.model.Member;
 import com.example.good_match.global.util.StatesEnum;
 import lombok.AllArgsConstructor;
@@ -50,6 +52,14 @@ public class Board {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sub_category_id")
+    private SubCategory subCategory;
 
     public void updateGame(String title, String contents, StatesEnum states) {
         this.title = title;

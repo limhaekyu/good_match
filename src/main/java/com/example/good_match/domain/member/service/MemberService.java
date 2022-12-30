@@ -34,7 +34,9 @@ public class MemberService {
     private final TokenProvider tokenProvider;
 
     private final RedisTemplate<String, String> redisTemplate;
-    // 회원가입
+    /*
+        회원가입
+     */
 
     @Transactional
     public ApiResponseDto signUpMember(SignUpRequestDto signUpRequestDto) {
@@ -60,7 +62,10 @@ public class MemberService {
         }
     }
 
-    // 로그인
+    /*
+        로그인
+     */
+
     @Transactional
     public ApiResponseDto login(LoginRequestDto loginRequestDto) {
         try {
@@ -86,7 +91,9 @@ public class MemberService {
         }
     }
 
-
+    /*
+        토큰 재발급
+     */
     @Transactional
     public ApiResponseDto reissue(ReissueRequestDto reissueRequestDto) {
         try {
@@ -121,6 +128,10 @@ public class MemberService {
         }
     }
 
+    /*
+        아이디 찾기
+     */
+
     public ApiResponseDto<FindIdResponseDto> findId(FindIdRequestDto findIdRequestDto) {
         try {
             // 이름 비밀번호 일치여부확인 후 아이디 반환
@@ -135,6 +146,9 @@ public class MemberService {
         }
     }
 
+    /*
+        토큰 정보를 통한 멤버 찾기
+     */
     public Member findMemberByJwt(User user) {
         return memberRepository.findById(Long.valueOf(user.getUsername())).orElseThrow( () -> new UsernameNotFoundException("일치하는 유저가 없습니다.") );
     }

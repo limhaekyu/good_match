@@ -1,5 +1,7 @@
-package com.example.good_match.domain.game.domain;
+package com.example.good_match.domain.board.domain;
 
+import com.example.good_match.domain.category.model.Category;
+import com.example.good_match.domain.category.model.SubCategory;
 import com.example.good_match.domain.member.model.Member;
 import com.example.good_match.global.util.StatesEnum;
 import lombok.AllArgsConstructor;
@@ -20,7 +22,7 @@ import java.sql.Timestamp;
 @Builder
 @Table(name = "game")
 @EntityListeners(AuditingEntityListener.class)
-public class Game {
+public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "game_id")
@@ -37,7 +39,7 @@ public class Game {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "game_status")
-    private GameStatus gameStatus;
+    private BoardStatus boardStatus;
 
     @CreatedDate
     @Column(name = "created_at")
@@ -50,4 +52,18 @@ public class Game {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sub_category_id")
+    private SubCategory subCategory;
+
+    public void updateGame(String title, String contents, StatesEnum states) {
+        this.title = title;
+        this.contents = contents;
+        this.states = states;
+    }
 }

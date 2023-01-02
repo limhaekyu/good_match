@@ -18,6 +18,7 @@ env:
   BUCKET_NAME: good-match-bucket
   CODE_DEPLOY_APP_NAME: good-match
   DEPLOYMENT_GROUP_NAME: good-match-deploy
+  APPLICATION: ${{ secrets.APPLICATION }}
 
 jobs:
   build:
@@ -26,13 +27,29 @@ jobs:
     
     # Taskd의 Sequence지정
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        
       - name: Setup Java JDK 17
         uses: actions/setup-java@v1
         with:
           java-version: 17
+          
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+                ~/.gradle/caches
+                ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*, '**/gradle-wrapper.properties') }}
+          restore-keys: |
+                ${{ runner.os }}-gradle-
+
+      - name: Checkout
+        uses: actions/checkout@v2
+      - run: touch ./src/main/resources/application.yml
+      - run: echo "${{env.APPLICATION}}" > ./src/main/resources/application.yml
+      - uses: actions/upload-artifact@v2
+        with:
+          name: application.yml
+          path: ./src/main/resources/application.yml
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
@@ -42,6 +59,11 @@ jobs:
         run: ./gradlew build
         shell: bash
         
+      - name: Cleanup Gradle Cache
+        if: ${{ always() }}
+        run: |
+            rm -f ~/.gradle/caches/moules-2/modules-2.lock
+            rm -f ~/.gradle/caches/modules-2/gc.properties
         
       - name: Make Zip File
         run: zip -qq -r ./$GITHUB_SHA.zip .
@@ -57,20 +79,20 @@ jobs:
           
       # S3 빌드 결과물을 S3 버킷에 업로드
       - name: Upload to S3
-        run:
-          aws deploy push \
-            --application-name $CODE_DEPLOY_APP_NAME \
-            --s3-location s3://$S3_BUCKET_NAME/$PROJECT_NAME/$GITHUB_SHA.zip \
-            --ignore-hidden-files \
-            --source .
-#         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$BUCKET_NAME/$PROJECT_NAME/$GITHUB_SHA.zip
+#         run:
+#           aws deploy push \
+#             --application-name $CODE_DEPLOY_APP_NAME \
+#             --s3-location s3://$S3_BUCKET_NAME/$PROJECT_NAME/$GITHUB_SHA.zip \
+#             --ignore-hidden-files \
+#             --source .
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$BUCKET_NAME/$PROJECT_NAME/$GITHUB_SHA.zip
 
       # S3 버킷에 있는 파일을 대상으로 CodeDeploy 실행
       - name: Code Deploy
-        run:
-          aws deploy create-deployment \
-            --application-name $CODE_DEPLOY_APP_NAME \
-            --deployment-config-name CodeDeployDefault.AllAtOnce \
-            --deployment-group-name $DEPLOYMENT_GROUP_NAME \
-            --s3-location bucket=$S3_BUCKET_NAME,key=$PROJECT_NAME/$GITHUB_SHA.zip,bundleType=zip
-#         run: aws deploy create-deployment --application-name $CODE_DEPLOY_APP_NAME --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name $DEPLOYMENT_GROUP_NAME --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip
+#         run:
+#           aws deploy create-deployment \
+#             --application-name $CODE_DEPLOY_APP_NAME \
+#             --deployment-config-name CodeDeployDefault.AllAtOnce \
+#             --deployment-group-name $DEPLOYMENT_GROUP_NAME \
+#             --s3-location bucket=$S3_BUCKET_NAME,key=$PROJECT_NAME/$GITHUB_SHA.zip,bundleType=zip
+        run: aws deploy create-deployment --application-name $CODE_DEPLOY_APP_NAME --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name $DEPLOYMENT_GROUP_NAME --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip

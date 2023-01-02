@@ -45,9 +45,6 @@ jobs:
           restore-keys: |
                 ${{ runner.os }}-gradle-
       
-      - name: Checkout
-        uses: actions/checkout@v3
-      
       - name: application.yml 만들기
         run: touch ./src/main/resources/application.yml
         

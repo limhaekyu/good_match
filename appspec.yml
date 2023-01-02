@@ -9,6 +9,7 @@ permissions:
   - objectr: /home/ec2-user/good-match/
     owner: ec2-user
     group: ec2-user
+    mode: 755
 
 hoods:
   AfterInstall:

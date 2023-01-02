@@ -46,7 +46,7 @@ jobs:
                 ${{ runner.os }}-gradle-
       
       - name: application.yml 만들기
-        run: vi ./src/main/resources/application.yml
+        run: mkdir ./src/main/resources/application.yml
         
       - name: application.yml 내용 채우기
         run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml

@@ -46,17 +46,17 @@ jobs:
           restore-keys: |
                 ${{ runner.os }}-gradle-
                 
-#       - name: application.yml 파일 담을 폴더 만들기
-#         run: mkdir ./src/main/resources
+      - name: application.yml 파일 담을 폴더 만들기
+        run: mkdir ./src/main/resources
       
-#       - name: application.yml 만들기
-#         run: touch ./src/main/resources/application.yml
+      - name: application.yml 만들기
+        run: touch ./src/main/resources/application.yml
         
-#       - name: application.yml 내용 채우기
-#         run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
+      - name: application.yml 내용 채우기
+        run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
         
-#       - name: cat application.yml
-#         run: cat ./src/main/resources/application.yml
+      - name: cat application.yml
+        run: cat ./src/main/resources/application.yml
       
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
@@ -107,17 +107,13 @@ jobs:
       
       # S3 버킷에 있는 파일을 대상으로 CodeDeploy 실행
       - name: Code Deploy
-        env:
-          AWS-ACCESS-KEY-ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS-SECRET-ACCESS-KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          
 #        run: aws deploy create-deployment --application-name $CODE_DEPLOY_APP_NAME --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name $DEPLOYMENT_GROUP_NAME --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip
         run: |
           aws deploy create-deployment
-          --application-name good-match
-          --deployment-group-name good-match-group
+          --application-name $CODE_DEPLOY_APP_NAME
+          --deployment-group-name $DEPLOYMENT_GROUP_NAME
           --file-exists-behavior OVERWRITE
-          --s3-location bucket=good_match,bundleType=zip,key=good_match.zip
+          --s3-location bucket=g$BUCKET_NAME,bundleType=zip,key=good_match.zip
           --region ap-northeast-2
 
 

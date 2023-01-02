@@ -107,14 +107,14 @@ jobs:
       
       # S3 버킷에 있는 파일을 대상으로 CodeDeploy 실행
       - name: Code Deploy
-#        run: aws deploy create-deployment --application-name $CODE_DEPLOY_APP_NAME --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name $DEPLOYMENT_GROUP_NAME --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip
+        run: aws deploy create-deployment --application-name $CODE_DEPLOY_APP_NAME --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name $DEPLOYMENT_GROUP_NAME --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/good_match.zip
       
-        run: |
-          aws deploy create-deployment 
-          --application-name $CODE_DEPLOY_APP_NAME 
-          --deployment-group-name $DEPLOYMENT_GROUP_NAME
-          --file-exists-behavior OVERWRITE 
-          --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=good_match.zip 
-          --region ap-northeast-2
+#         run: |
+#           aws deploy create-deployment 
+#           --application-name $CODE_DEPLOY_APP_NAME 
+#           --deployment-group-name $DEPLOYMENT_GROUP_NAME
+#           --file-exists-behavior OVERWRITE 
+#           --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=good_match.zip 
+#           --region ap-northeast-2
 
 

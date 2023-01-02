@@ -3,8 +3,9 @@ os: linux
 
 files:
   - source: /
-    destination: /home/ec2-user/good-match
-
+    destination: /home/ec2-user/good-match/
+    overwrite: yes
+    
 permissions:
   - objectr: /home/ec2-user/good-match/
     owner: ec2-user

@@ -16,8 +16,8 @@ on:
 env:
   PROJECT_NAME: good_match
   BUCKET_NAME: good-match-bucket
-  CODE_DEPLOY_APP_NAME: good-match
-  DEPLOYMENT_GROUP_NAME: good-match-group
+  CODE_DEPLOY_APP_NAME: goodmatch-deploy-app
+  DEPLOYMENT_GROUP_NAME: goodmatch-deploy-group
 
 jobs:
   build:

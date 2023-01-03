@@ -36,15 +36,15 @@ jobs:
           java-version: 17
           distribution: 'temurin'
           
-#       - name: Cache Gradle packages
-#         uses: actions/cache@v2
-#         with:
-#           path: |
-#                 ~/.gradle/caches
-#                 ~/.gradle/wrapper
-#           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-#           restore-keys: |
-#                 ${{ runner.os }}-gradle-
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+                ~/.gradle/caches
+                ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+                ${{ runner.os }}-gradle-
                 
       - name: application.yml 파일 담을 폴더 만들기
         run: mkdir ./src/main/resources
@@ -64,11 +64,11 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
         
-#       - name: Cleanup Gradle Cache
-#         if: ${{ always() }}
-#         run: |
-#             rm -f ~/.gradle/caches/moules-2/modules-2.lock
-#             rm -f ~/.gradle/caches/modules-2/gc.properties
+      - name: Cleanup Gradle Cache
+        if: ${{ always() }}
+        run: |
+            rm -f ~/.gradle/caches/moules-2/modules-2.lock
+            rm -f ~/.gradle/caches/modules-2/gc.properties
 
       # 디렉토리 생성
       - name: Make Directory

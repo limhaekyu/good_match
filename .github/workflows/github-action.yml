@@ -36,15 +36,15 @@ jobs:
           java-version: 17
           distribution: 'temurin'
           
-      - name: Cache Gradle packages
-        uses: actions/cache@v2
-        with:
-          path: |
-                ~/.gradle/caches
-                ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-                ${{ runner.os }}-gradle-
+#       - name: Cache Gradle packages
+#         uses: actions/cache@v2
+#         with:
+#           path: |
+#                 ~/.gradle/caches
+#                 ~/.gradle/wrapper
+#           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+#           restore-keys: |
+#                 ${{ runner.os }}-gradle-
                 
       - name: application.yml 파일 담을 폴더 만들기
         run: mkdir ./src/main/resources
@@ -64,15 +64,12 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
         
-      - name: Cleanup Gradle Cache
-        if: ${{ always() }}
-        run: |
-            rm -f ~/.gradle/caches/moules-2/modules-2.lock
-            rm -f ~/.gradle/caches/modules-2/gc.properties
+#       - name: Cleanup Gradle Cache
+#         if: ${{ always() }}
+#         run: |
+#             rm -f ~/.gradle/caches/moules-2/modules-2.lock
+#             rm -f ~/.gradle/caches/modules-2/gc.properties
 
-#       - name: Make Zip File
-#         run: zip -qq -r ./$GITHUB_SHA.zip .
-#         shell: bash
       # 디렉토리 생성
       - name: Make Directory
         run: mkdir -p deploy
@@ -102,19 +99,9 @@ jobs:
           
       # S3 빌드 결과물을 S3 버킷에 업로드
       - name: Upload to S3
-#         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$BUCKET_NAME/$PROJECT_NAME/$GITHUB_SHA.zip
         run: aws s3 cp --region ap-northeast-2 ./good_match.zip s3://$BUCKET_NAME/$PROJECT_NAME/
       
       # S3 버킷에 있는 파일을 대상으로 CodeDeploy 실행
       - name: Code Deploy
         run: aws deploy create-deployment --application-name $CODE_DEPLOY_APP_NAME --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name $DEPLOYMENT_GROUP_NAME --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/good_match.zip
       
-#         run: |
-#           aws deploy create-deployment 
-#           --application-name $CODE_DEPLOY_APP_NAME 
-#           --deployment-group-name $DEPLOYMENT_GROUP_NAME
-#           --file-exists-behavior OVERWRITE 
-#           --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=good_match.zip 
-#           --region ap-northeast-2
-
-

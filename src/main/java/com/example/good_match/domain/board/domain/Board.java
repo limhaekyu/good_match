@@ -2,8 +2,10 @@ package com.example.good_match.domain.board.domain;
 
 import com.example.good_match.domain.category.model.Category;
 import com.example.good_match.domain.category.model.SubCategory;
+import com.example.good_match.domain.comment.model.Comment;
 import com.example.good_match.domain.member.model.Member;
 import com.example.good_match.global.util.StatesEnum;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,13 +16,15 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Builder
-@Table(name = "game")
+@Table(name = "board")
 @EntityListeners(AuditingEntityListener.class)
 public class Board {
     @Id
@@ -48,6 +52,10 @@ public class Board {
     @LastModifiedDate
     @Column(name = "updated_at")
     private Timestamp updatedAt;
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

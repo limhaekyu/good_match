@@ -6,10 +6,7 @@ import com.example.good_match.global.response.ApiResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,5 +17,10 @@ public class CommentController {
     @PostMapping("")
     public ApiResponseDto addComment(@AuthenticationPrincipal User user, @RequestBody AddCommentRequestDto addCommentRequestDto){
         return commentService.addComment(addCommentRequestDto, user);
+    }
+
+    @DeleteMapping("/{id}")
+    public ApiResponseDto cancelComment(@AuthenticationPrincipal User user, @PathVariable("id") Long commentId){
+        return commentService.cancelComment(user, commentId);
     }
 }

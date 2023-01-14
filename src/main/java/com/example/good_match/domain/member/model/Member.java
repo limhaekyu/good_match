@@ -1,6 +1,7 @@
 package com.example.good_match.domain.member.model;
 
 import com.example.good_match.domain.board.domain.Board;
+import com.example.good_match.domain.comment.model.Comment;
 import com.example.good_match.global.util.StatesEnum;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
@@ -63,4 +64,8 @@ public class Member {
     @JsonBackReference
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Board> boards = new ArrayList<>();
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 }

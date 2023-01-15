@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class AddCommentRequestDto {
+public class UpdateCommentRequestDto {
     private String contents;
-
-    private Long boardId;
 }

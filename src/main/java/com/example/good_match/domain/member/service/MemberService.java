@@ -23,8 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.concurrent.TimeUnit;
-
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -41,22 +39,29 @@ public class MemberService {
     @Transactional
     public ApiResponseDto signUpMember(SignUpRequestDto signUpRequestDto) {
         try {
-            String password = passwordEncoder.encode(signUpRequestDto.getPassword());
+            if (memberRepository.existsByPhoneNumber(signUpRequestDto.getPhoneNumber()) && memberRepository.existsByEmail(signUpRequestDto.getEmail())) {
+                return ApiResponseDto.of(ResponseStatusCode.REGISTERED.getValue(), "이미 등록된 사용자입니다.");
+            } else if(memberRepository.existsByEmail(signUpRequestDto.getEmail())) {
+                return ApiResponseDto.of(ResponseStatusCode.REGISTERED.getValue(), "이미 등록된 이메일입니다. ");
+            } else if(memberRepository.existsByPhoneNumber(signUpRequestDto.getPhoneNumber())) {
+                return ApiResponseDto.of(ResponseStatusCode.REGISTERED.getValue(), "이미 등록된 번호입니다.");
+            } else {
+                String password = passwordEncoder.encode(signUpRequestDto.getPassword());
 
-            Member member = Member.builder()
-                    .email(signUpRequestDto.getEmail())
-                    .password(password)
-                    .name(signUpRequestDto.getName())
-                    .phoneNumber(signUpRequestDto.getPhoneNumber())
-                    .gender(signUpRequestDto.getGender())
-                    .states(signUpRequestDto.getStates())
-                    .authority(Authority.ROLE_USER)
-                    .build();
+                Member member = Member.builder()
+                        .email(signUpRequestDto.getEmail())
+                        .password(password)
+                        .name(signUpRequestDto.getName())
+                        .phoneNumber(signUpRequestDto.getPhoneNumber())
+                        .gender(signUpRequestDto.getGender())
+                        .states(signUpRequestDto.getStates())
+                        .authority(Authority.ROLE_USER)
+                        .build();
 
-            memberRepository.save(member);
+                memberRepository.save(member);
 
-            return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "회원가입에 성공했습니다");
-
+                return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "회원가입에 성공했습니다");
+            }
         } catch (Exception e){
             return ApiResponseDto.of(ResponseStatusCode.FAIL.getValue(), "회원가입에 실패했습니다. " + e.getMessage());
         }

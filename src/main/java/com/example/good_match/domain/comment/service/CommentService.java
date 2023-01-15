@@ -2,6 +2,7 @@ package com.example.good_match.domain.comment.service;
 
 import com.example.good_match.domain.board.repository.BoardRepository;
 import com.example.good_match.domain.comment.dto.request.AddCommentRequestDto;
+import com.example.good_match.domain.comment.dto.request.UpdateCommentRequestDto;
 import com.example.good_match.domain.comment.model.Comment;
 import com.example.good_match.domain.comment.repository.CommentRepository;
 import com.example.good_match.domain.member.model.Authority;
@@ -40,9 +41,24 @@ public class CommentService {
     }
 
     @Transactional
+    public ApiResponseDto updateComment(User user, Long commentId, UpdateCommentRequestDto updateCommentRequestDto) {
+        try {
+            Comment comment = this.findCommentById(commentId);
+            if (comment.getMember().equals(memberService.findMemberByJwt(user))){
+                comment.update(
+                        updateCommentRequestDto.getContents()
+                );
+            }
+            return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "댓글 수정 성공!");
+        } catch (Exception e) {
+            return ApiResponseDto.of(ResponseStatusCode.FAIL.getValue(), "댓글 수정 실패! " + e.getMessage());
+        }
+    }
+
+    @Transactional
     public ApiResponseDto cancelComment(User user, Long commentId) {
         try {
-            Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("해당 댓글을 찾을 수 없습니다."));
+            Comment comment = this.findCommentById(commentId);
             Member member = memberService.findMemberByJwt(user);
 
             if (member.getAuthority() == Authority.ROLE_ADMIN || member.equals(comment.getMember())) {
@@ -56,4 +72,9 @@ public class CommentService {
             return ApiResponseDto.of(ResponseStatusCode.FAIL.getValue(), "댓글 삭제 실패! " + e.getMessage());
         }
     }
+
+    public Comment findCommentById(Long commentId) {
+        return commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("해당 댓글을 찾을 수 없습니다."));
+    }
+
 }

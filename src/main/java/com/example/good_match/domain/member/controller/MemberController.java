@@ -18,25 +18,25 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @ApiOperation(value = "회원가입")
+    @ApiOperation(value = "[회원] 회원가입")
     @PostMapping("/sign-up")
     public ApiResponseDto signUp(@RequestBody SignUpRequestDto signUpRequestDto) {
         return memberService.signUpMember(signUpRequestDto);
     }
 
-    @ApiOperation(value = "로그인")
+    @ApiOperation(value = "[회원] 로그인")
     @PostMapping("/login")
     public ApiResponseDto login(@RequestBody LoginRequestDto loginRequestDto) {
         return memberService.login(loginRequestDto);
     }
 
-    @ApiOperation(value = "엑세스 토큰 재발급")
+    @ApiOperation(value = "[회원] 엑세스 토큰 재발급")
     @PostMapping("/reissue")
     public ApiResponseDto reissue(@RequestBody ReissueRequestDto reissueRequestDto) {
         return memberService.reissue(reissueRequestDto);
     }
 
-    @ApiOperation(value = "아이디 찾기")
+    @ApiOperation(value = "[회원] 아이디 찾기")
     @PostMapping("/find-id")
     public ApiResponseDto<FindIdResponseDto> findId(@RequestBody FindIdRequestDto findIdRequestDto){
         return memberService.findId(findIdRequestDto);

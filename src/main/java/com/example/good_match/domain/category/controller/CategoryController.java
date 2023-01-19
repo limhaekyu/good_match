@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class CategoryController {
     private final CategoryService categoryService;
 
-    @ApiOperation(value = "전체 카테고리 리스트")
+    @ApiOperation(value = "[카테고리] 전체 카테고리 리스트")
     @GetMapping("")
     public ApiResponseDto getCategoryList(){
         return categoryService.getCategoryList();
     }
 
-    @ApiOperation(value = "카테고리의 서브카테고리 조회")
+    @ApiOperation(value = "[카테고리] 서브카테고리 조회")
     @GetMapping("/{id}")
     public ApiResponseDto getCateogry(@PathVariable("id") Long categoryId){
         return categoryService.getSubCategoryList(categoryId);

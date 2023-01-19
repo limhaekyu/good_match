@@ -60,7 +60,7 @@ public class MemberService {
 
                 memberRepository.save(member);
 
-                return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "회원가입에 성공했습니다");
+                return ApiResponseDto.of(ResponseStatusCode.CREATED.getValue(), "회원가입에 성공했습니다");
             }
         } catch (Exception e){
             return ApiResponseDto.of(ResponseStatusCode.FAIL.getValue(), "회원가입에 실패했습니다. " + e.getMessage());

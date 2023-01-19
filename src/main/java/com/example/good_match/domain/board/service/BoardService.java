@@ -22,7 +22,7 @@ public class BoardService {
     private final MemberService memberService;
 
     /*
-        [매칭] 게임 게시글 등록
+        [게시글] 게시글 등록
      */
     @Transactional
     public ApiResponseDto addGame(AddBoardRequestDto addBoardRequestDto, User user) {
@@ -34,7 +34,7 @@ public class BoardService {
                     .boardStatus(BoardStatus.reservation_wait)
                     .member(memberService.findMemberByJwt(user))
                     .build());
-            return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "게임 매칭 게시글 등록을 성공했습니다. ");
+            return ApiResponseDto.of(ResponseStatusCode.CREATED.getValue(), "게임 매칭 게시글 등록을 성공했습니다. ");
         } catch (Exception e){
             return ApiResponseDto.of(ResponseStatusCode.FAIL.getValue(), "게임 매칭 게시글 등록에 실패했습니다. " + e.getMessage());
         }
@@ -42,7 +42,7 @@ public class BoardService {
 
 
     /*
-        [매칭] 게임 게시글 상세 조회
+        [게시글] 게시글 상세 조회
      */
     @Transactional
     public ApiResponseDto selectGameDetail(Long id) {
@@ -67,7 +67,7 @@ public class BoardService {
 
 
     /*
-        [매칭] 게임 게시글 삭제
+        [게시글] 게시글 삭제
      */
 
     @Transactional
@@ -87,7 +87,7 @@ public class BoardService {
 
 
     /*
-        [매칭] 게임 게시글 찾기 (with. index id)
+        [게시글] 게시글 찾기 (with. index id)
      */
 
     private Board findGameById(Long id) {
@@ -95,7 +95,7 @@ public class BoardService {
     }
 
     /*
-        [매칭] 게임 게시글 수정
+        [게시글] 게시글 수정
      */
 
     @Transactional

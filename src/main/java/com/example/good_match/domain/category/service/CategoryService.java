@@ -20,7 +20,9 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final SubCategoryRepository subCategoryRepository;
 
-    // 전체 카테고리 불러오기
+    /*
+        [카테고리] 카테고리 리스트 출력
+     */
     public ApiResponseDto getCategoryList() {
         try {
             List<CategoryResponseDto> categoryResponseList = categoryRepository.findAll().stream().map(this::response).toList();
@@ -31,7 +33,9 @@ public class CategoryService {
         }
     }
 
-    // 카테고리 별 서브 카테고리 호출
+    /*
+        [카테고리] 서브 카테고리 리스트 출력
+     */
     public ApiResponseDto getSubCategoryList(Long categoryId) {
         try {
 
@@ -42,10 +46,11 @@ public class CategoryService {
         }
     }
 
-    // 카테고리 별 서브 카테고리 매핑
+    /*
+        [카테고리] 카테고리별 서브 카테고리 매핑
+     */
     public CategoryResponseDto response(Category category) {
         List<SubCategoryResponseDto> subCategoryResponseList = new ArrayList<>();
-
         if(category.getSubCategories() != null) {
             for(SubCategory subCategory : category.getSubCategories()){
                 subCategoryResponseList.add(

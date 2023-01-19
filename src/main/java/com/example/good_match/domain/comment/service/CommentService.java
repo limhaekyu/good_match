@@ -34,7 +34,7 @@ public class CommentService {
                                     ()->new IllegalArgumentException("게시글을 찾을 수 없습니다.")))
                             .build()
             );
-            return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "댓글 작성 성공!");
+            return ApiResponseDto.of(ResponseStatusCode.CREATED.getValue(), "댓글 작성 성공!");
         } catch (Exception e){
             return ApiResponseDto.of(ResponseStatusCode.FAIL.getValue(), "댓글 작성 실패! "+e.getMessage());
         }

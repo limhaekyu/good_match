@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,7 +23,7 @@ public class SelectBoardDetailResponseDto {
 
     private BoardStatus boardStatus;
 
-    private Timestamp updatedAt;
+    private LocalDateTime updatedAt;
 
     private Long memberId;
 

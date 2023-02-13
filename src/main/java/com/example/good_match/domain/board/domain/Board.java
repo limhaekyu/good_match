@@ -40,7 +40,7 @@ public class Board extends BaseTimeEntity {
     private StatesEnum states;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "game_status")
+    @Column(name = "board_status")
     private BoardStatus boardStatus;
 
     @JsonBackReference
@@ -59,7 +59,7 @@ public class Board extends BaseTimeEntity {
     @JoinColumn(name = "sub_category_id")
     private SubCategory subCategory;
 
-    public void updateGame(String title, String contents, StatesEnum states) {
+    public void updateBoard(String title, String contents, StatesEnum states) {
         this.title = title;
         this.contents = contents;
         this.states = states;

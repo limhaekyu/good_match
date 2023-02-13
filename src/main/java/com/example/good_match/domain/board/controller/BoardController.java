@@ -18,29 +18,29 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @ApiOperation(value = "[매칭] 게임 게시글 등록")
+    @ApiOperation(value = "[게시글] 게시글 등록")
     @PostMapping("")
     public ApiResponseDto addGame(@AuthenticationPrincipal User user, @RequestBody AddBoardRequestDto addBoardRequestDto) {
-        return boardService.addGame(addBoardRequestDto, user);
+        return boardService.addBoard(addBoardRequestDto, user);
     }
 
-    @ApiOperation(value = "[매칭] 게임 게시글 상세조회")
+    @ApiOperation(value = "[게시글] 게시글 상세조회")
     @GetMapping("/{id}")
     public ApiResponseDto selectGameDetail(@PathVariable Long id){
-        return boardService.selectGameDetail(id);
+        return boardService.selectBoardDetail(id);
     }
 
-    @ApiOperation(value = "[매칭] 게임 게시글 삭제")
+    @ApiOperation(value = "[게시글] 게시글 삭제")
     @DeleteMapping("/{id}")
     public ApiResponseDto deleteGame(@PathVariable Long id, @AuthenticationPrincipal User user) {
-        return boardService.deleteGame(id, user);
+        return boardService.deleteBoard(id, user);
     }
 
     // 게시글 수정
-    @ApiOperation(value = "[매칭] 게임 게시글 수정")
+    @ApiOperation(value = "[게시글] 게시글 수정")
     @PutMapping("/{id}")
     public ApiResponseDto updateGame(@PathVariable Long id, @RequestBody UpdateBoardRequestDto updateBoardRequestDto, @AuthenticationPrincipal User user) {
-        return boardService.updateGame(id, updateBoardRequestDto, user);
+        return boardService.updateBoard(id, updateBoardRequestDto, user);
     }
 
 }

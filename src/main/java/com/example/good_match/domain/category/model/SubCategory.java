@@ -1,6 +1,7 @@
 package com.example.good_match.domain.category.model;
 
 import com.example.good_match.domain.board.domain.Board;
+import com.example.good_match.global.util.BaseTimeEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,7 @@ import java.util.List;
 @Getter
 @Builder
 @Table(name = "sub_category")
-public class SubCategory {
+public class SubCategory extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sub_category_id")
@@ -28,14 +29,6 @@ public class SubCategory {
 
     @Column(name = "sub_cateogry_title")
     private String subCategoryTitle;
-
-    @CreatedDate
-    @Column(name = "created_at")
-    private Timestamp createdAt;
-
-    @LastModifiedDate
-    @Column(name = "updated_at")
-    private Timestamp updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")

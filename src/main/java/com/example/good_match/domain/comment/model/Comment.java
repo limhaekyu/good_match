@@ -2,6 +2,7 @@ package com.example.good_match.domain.comment.model;
 
 import com.example.good_match.domain.board.domain.Board;
 import com.example.good_match.domain.member.model.Member;
+import com.example.good_match.global.util.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +15,7 @@ import javax.persistence.*;
 @Getter
 @Builder
 @Entity
-public class Comment {
+public class Comment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

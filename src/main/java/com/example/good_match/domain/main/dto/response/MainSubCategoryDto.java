@@ -5,16 +5,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Builder
-public class MainCategoryDto {
-    private Long id;
-
-    private String title;
-
-    private List<MainSubCategoryDto> subCategoryList;
+public class MainSubCategoryDto {
+    private Long subCategoryId;
+    private String subCategoryTitle;
 }

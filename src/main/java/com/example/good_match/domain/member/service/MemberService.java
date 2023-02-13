@@ -20,6 +20,7 @@ public interface MemberService {
 
     public ApiResponseDto reissue(ReissueRequestDto reissueRequestDto);
 
+
     public ApiResponseDto<FindIdResponseDto> findId(FindIdRequestDto findIdRequestDto);
 
     public Member findMemberByJwt(User user);

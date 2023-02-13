@@ -13,5 +13,4 @@ public interface BoardService {
     public ApiResponseDto deleteBoard(Long id, User user);
 
     public ApiResponseDto updateBoard(Long id, UpdateBoardRequestDto updateBoardRequestDto, User user);
-
 }

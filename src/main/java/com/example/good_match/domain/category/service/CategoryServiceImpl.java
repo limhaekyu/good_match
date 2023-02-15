@@ -1,5 +1,9 @@
 package com.example.good_match.domain.category.service;
 
+import com.example.good_match.domain.board.domain.Board;
+import com.example.good_match.domain.board.repository.BoardRepository;
+import com.example.good_match.domain.category.dto.response.BoardResponseDto;
+import com.example.good_match.domain.category.dto.response.BoardsByCategoryResponseDto;
 import com.example.good_match.domain.category.dto.response.CategoryResponseDto;
 import com.example.good_match.domain.category.dto.response.SubCategoryResponseDto;
 import com.example.good_match.domain.category.model.Category;
@@ -8,6 +12,7 @@ import com.example.good_match.domain.category.repository.CategoryRepository;
 import com.example.good_match.domain.category.repository.SubCategoryRepository;
 import com.example.good_match.global.response.ApiResponseDto;
 import com.example.good_match.global.response.ResponseStatusCode;
+import com.example.good_match.global.util.StatesEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +24,13 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService{
     private final CategoryRepository categoryRepository;
     private final SubCategoryRepository subCategoryRepository;
+    private final BoardRepository boardRepository;
 
-    // 전체 카테고리 불러오기
-    public ApiResponseDto getCategoryList() {
+
+    /*
+        전체 카테고리 리스트 호출
+    */
+    public ApiResponseDto<List<CategoryResponseDto>> selectCategoryList() {
         try {
             List<CategoryResponseDto> categoryResponseList = categoryRepository.findAll().stream().map(this::response).toList();
 
@@ -31,8 +40,11 @@ public class CategoryServiceImpl implements CategoryService{
         }
     }
 
-    // 카테고리 별 서브 카테고리 호출
-    public ApiResponseDto getSubCategoryList(Long categoryId) {
+    /*
+        카테고리별 서브 카테고리 호출
+    */
+
+    public ApiResponseDto<List<SubCategoryResponseDto>> selectSubCategoryList(Long categoryId) {
         try {
 
             List<SubCategoryResponseDto> subCategoryResponselist = subCategoryRepository.findAllByCategoryId(categoryId).stream().map(this::subResponse).toList();
@@ -40,6 +52,49 @@ public class CategoryServiceImpl implements CategoryService{
         } catch (Exception e) {
             return ApiResponseDto.of(ResponseStatusCode.FAIL.getValue(), "서브 카테고리 조회 실패 "+e.getMessage());
         }
+    }
+
+    /*
+        카테고리 ID로 카테고리 찾기
+    */
+    @Override
+    public Category findCategoryById(Long categoryId) {
+        return categoryRepository.findById(categoryId).orElseThrow(()-> new IllegalArgumentException("카테고리를 찾을 수 없습니다."));
+    }
+
+
+    /*
+        카테고리별 게시글 호출
+    */
+    @Override
+    public ApiResponseDto<BoardsByCategoryResponseDto> selectBoardByCategory(Long categoryId, StatesEnum states) {
+        try {
+            Category category = findCategoryById(categoryId);
+            BoardsByCategoryResponseDto boardsByCategory = BoardsByCategoryResponseDto.builder()
+                    .categoryId(categoryId)
+                    .categoryTitle(category.getTitle())
+                    .boards(selectBoards(states, category))
+                    .build();
+            return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "해당 카테고리 게시글 조회 성공! ", boardsByCategory);
+        } catch (Exception e) {
+            return ApiResponseDto.of(ResponseStatusCode.INTERNAL_SERVER_ERROR.getValue(), e.getMessage());
+        }
+    }
+
+    private List<BoardResponseDto> selectBoards(StatesEnum states, Category category) {
+        List<BoardResponseDto> boardResponses = new ArrayList<>();
+        List<Board> boards = boardRepository.findAllByStatesAndCategory(states, category);
+        for (Board board : boards) {
+            BoardResponseDto boardResponse = BoardResponseDto.builder()
+                    .id(board.getId())
+                    .title(board.getTitle())
+                    .states(board.getStates())
+                    .boardStatus(board.getBoardStatus())
+                    .updatedAt(board.getUpdatedAt())
+                    .build();
+            boardResponses.add(boardResponse);
+        }
+        return boardResponses;
     }
 
     // 카테고리 별 서브 카테고리 매핑

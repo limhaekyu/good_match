@@ -1,4 +1,4 @@
-package com.example.good_match.domain.main.dto.response;
+package com.example.good_match.domain.category.dto.response;
 
 import com.example.good_match.domain.board.domain.BoardStatus;
 import com.example.good_match.global.util.StatesEnum;
@@ -13,13 +13,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Builder
-public class MainBoardDto {
+public class BoardResponseDto {
 
     private Long id;
 
     private String title;
 
-    private StatesEnum statesEnum;
+    private StatesEnum states;
 
     private BoardStatus boardStatus;
 

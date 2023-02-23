@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 public class MainResponseDto {
 
-    List<MainCategoryDto> mainCategoryList;
+    List<CategoryResponseDto> categories;
 
-    List<MainBoardDto> mainBoardList;
+    List<BoardResponseDto> boards;
 }

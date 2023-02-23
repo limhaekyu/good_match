@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/board")
 public class BoardController {
-    //게시글 수정
 
     private final BoardService boardService;
 
@@ -36,7 +35,6 @@ public class BoardController {
         return boardService.deleteBoard(id, user);
     }
 
-    // 게시글 수정
     @ApiOperation(value = "[게시글] 게시글 수정")
     @PutMapping("/{id}")
     public ApiResponseDto updateGame(@PathVariable Long id, @RequestBody UpdateBoardRequestDto updateBoardRequestDto, @AuthenticationPrincipal User user) {

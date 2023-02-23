@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Builder
-public class MainBoardDto {
+public class BoardResponseDto {
 
     private Long id;
 

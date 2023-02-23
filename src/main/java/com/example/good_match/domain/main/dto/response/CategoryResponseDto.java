@@ -11,10 +11,10 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Builder
-public class MainCategoryDto {
+public class CategoryResponseDto {
     private Long id;
 
     private String title;
 
-    private List<MainSubCategoryDto> subCategoryList;
+    private List<MainSubCategoryDto> subCategories;
 }

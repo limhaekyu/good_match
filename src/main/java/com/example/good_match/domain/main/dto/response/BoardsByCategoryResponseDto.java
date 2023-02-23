@@ -12,8 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Builder
-public class BoardByCategoryResponseDto {
+public class BoardsByCategoryResponseDto {
     private Long categoryId;
     private String categoryTitle;
-    List<BoardResponseDto> boardList;
+    List<BoardResponseDto> boards;
 }

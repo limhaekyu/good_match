@@ -1,6 +1,6 @@
 package com.example.good_match.domain.comment.model;
 
-import com.example.good_match.domain.board.domain.Board;
+import com.example.good_match.domain.post.domain.Post;
 import com.example.good_match.domain.member.model.Member;
 import com.example.good_match.global.util.BaseTimeEntity;
 import lombok.AllArgsConstructor;
@@ -30,8 +30,8 @@ public class Comment extends BaseTimeEntity {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id")
-    private Board board;
+    @JoinColumn(name = "post_id")
+    private Post post;
 
     public void update(String contents) {
         this.contents = contents;

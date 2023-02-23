@@ -1,6 +1,6 @@
 package com.example.good_match.domain.comment.controller;
 
-import com.example.good_match.domain.comment.dto.request.AddCommentRequestDto;
+import com.example.good_match.domain.comment.dto.request.InsertCommentRequestDto;
 import com.example.good_match.domain.comment.dto.request.UpdateCommentRequestDto;
 import com.example.good_match.domain.comment.service.CommentService;
 import com.example.good_match.global.response.ApiResponseDto;
@@ -18,8 +18,8 @@ public class CommentController {
 
     @ApiOperation(value = "[댓글] 댓글 등록")
     @PostMapping("")
-    public ApiResponseDto addComment(@AuthenticationPrincipal User user, @RequestBody AddCommentRequestDto addCommentRequestDto) {
-        return commentService.addComment(addCommentRequestDto, user);
+    public ApiResponseDto insertComment(@AuthenticationPrincipal User user, @RequestBody InsertCommentRequestDto insertCommentRequestDto) {
+        return commentService.insertComment(insertCommentRequestDto, user);
     }
 
     @ApiOperation(value = "[댓글] 댓글 수정")

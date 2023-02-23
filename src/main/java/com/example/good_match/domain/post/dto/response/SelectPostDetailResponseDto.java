@@ -1,27 +1,23 @@
-package com.example.good_match.domain.board.dto.response;
+package com.example.good_match.domain.post.dto.response;
 
-import com.example.good_match.domain.board.domain.BoardStatus;
 import com.example.good_match.global.util.StatesEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Builder
-public class SelectBoardDetailResponseDto {
+public class SelectPostDetailResponseDto {
     private String title;
 
     private String contents;
 
     private StatesEnum states;
-
-    private BoardStatus boardStatus;
 
     private LocalDateTime updatedAt;
 

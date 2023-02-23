@@ -1,6 +1,6 @@
 package com.example.good_match.domain.member.model;
 
-import com.example.good_match.domain.board.domain.Board;
+import com.example.good_match.domain.post.domain.Post;
 import com.example.good_match.domain.comment.model.Comment;
 import com.example.good_match.global.util.BaseTimeEntity;
 import com.example.good_match.global.util.StatesEnum;
@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,9 +52,15 @@ public class Member extends BaseTimeEntity {
     @Column(name = "authority")
     private Authority authority;
 
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+
     @JsonBackReference
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Board> boards = new ArrayList<>();
+    private List<Post> posts = new ArrayList<>();
 
     @JsonBackReference
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

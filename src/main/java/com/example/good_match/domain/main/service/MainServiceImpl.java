@@ -1,12 +1,15 @@
 package com.example.good_match.domain.main.service;
 
-import com.example.good_match.domain.board.domain.Board;
-import com.example.good_match.domain.board.repository.BoardRepository;
 import com.example.good_match.domain.category.model.Category;
 import com.example.good_match.domain.category.model.SubCategory;
 import com.example.good_match.domain.category.repository.CategoryRepository;
 import com.example.good_match.domain.category.service.CategoryService;
-import com.example.good_match.domain.main.dto.response.*;
+import com.example.good_match.domain.main.dto.response.CategoryResponseDto;
+import com.example.good_match.domain.main.dto.response.MainResponseDto;
+import com.example.good_match.domain.main.dto.response.MainSubCategoryDto;
+import com.example.good_match.domain.main.dto.response.PostResponseDto;
+import com.example.good_match.domain.post.domain.Post;
+import com.example.good_match.domain.post.repository.PostRepository;
 import com.example.good_match.global.response.ApiResponseDto;
 import com.example.good_match.global.response.ResponseStatusCode;
 import com.example.good_match.global.util.StatesEnum;
@@ -21,7 +24,7 @@ import java.util.List;
 public class MainServiceImpl implements MainService {
 
     private final CategoryRepository categoryRepository;
-    private final BoardRepository boardRepository;
+    private final PostRepository postRepository;
 
     private final CategoryService categoryService;
 
@@ -33,7 +36,7 @@ public class MainServiceImpl implements MainService {
         try {
             MainResponseDto mainResponse = MainResponseDto.builder()
                     .categories(selectCategoryList())
-                    .boards(selectBoardsByCategory(states, categoryService.findCategoryById(0L)))
+                    .posts(selectPostsByCategory(states, categoryService.findCategoryById(0L)))
                     .build();
             return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), " 메인 조회 성공! " ,mainResponse);
         } catch (Exception e) {
@@ -45,19 +48,18 @@ public class MainServiceImpl implements MainService {
         카테고리별 게시글 데이터 반환시키는 로직 필요
     */
 
-    private List<BoardResponseDto> selectBoardsByCategory(StatesEnum states, Category category) {
-        List<Board> boards = boardRepository.findAllByStatesAndCategory(states, category);
-        List<BoardResponseDto> mainBoards = new ArrayList<>();
-        for (Board board : boards) {
-            mainBoards.add(BoardResponseDto.builder()
-                        .id(board.getId())
-                        .title(board.getTitle())
-                        .boardStatus(board.getBoardStatus())
-                        .states(board.getStates())
-                        .updatedAt(board.getUpdatedAt())
+    private List<PostResponseDto> selectPostsByCategory(StatesEnum states, Category category) {
+        List<Post> posts = postRepository.findAllByStatesAndCategory(states, category);
+        List<PostResponseDto> mainPosts = new ArrayList<>();
+        for (Post post : posts) {
+            mainPosts.add(PostResponseDto.builder()
+                        .id(post.getId())
+                        .title(post.getTitle())
+                        .states(post.getStates())
+                        .updatedAt(post.getUpdatedAt())
                     .build());
         }
-        return mainBoards;
+        return mainPosts;
     }
 
     private List<CategoryResponseDto> selectCategoryList(){

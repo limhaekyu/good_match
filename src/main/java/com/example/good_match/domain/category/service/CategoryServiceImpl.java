@@ -1,10 +1,10 @@
 package com.example.good_match.domain.category.service;
 
-import com.example.good_match.domain.board.domain.Board;
-import com.example.good_match.domain.board.repository.BoardRepository;
+import com.example.good_match.domain.post.domain.Post;
+import com.example.good_match.domain.post.repository.PostRepository;
 import com.example.good_match.domain.category.dto.request.InsertCategoryRequestDto;
-import com.example.good_match.domain.category.dto.response.BoardResponseDto;
-import com.example.good_match.domain.category.dto.response.BoardsByCategoryResponseDto;
+import com.example.good_match.domain.category.dto.response.PostResponseDto;
+import com.example.good_match.domain.category.dto.response.PostListByCategoryResponseDto;
 import com.example.good_match.domain.category.dto.response.CategoryResponseDto;
 import com.example.good_match.domain.category.dto.response.SubCategoryResponseDto;
 import com.example.good_match.domain.category.model.Category;
@@ -14,7 +14,6 @@ import com.example.good_match.domain.category.repository.SubCategoryRepository;
 import com.example.good_match.global.response.ApiResponseDto;
 import com.example.good_match.global.response.ResponseStatusCode;
 import com.example.good_match.global.util.StatesEnum;
-import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,7 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService{
     private final CategoryRepository categoryRepository;
     private final SubCategoryRepository subCategoryRepository;
-    private final BoardRepository boardRepository;
+    private final PostRepository postRepository;
 
 
     /*
@@ -98,13 +97,13 @@ public class CategoryServiceImpl implements CategoryService{
         카테고리별 게시글 호출
     */
     @Override
-    public ApiResponseDto<BoardsByCategoryResponseDto> selectBoardByCategory(Long categoryId, StatesEnum states) {
+    public ApiResponseDto<PostListByCategoryResponseDto> selectPostByCategory(Long categoryId, StatesEnum states) {
         try {
             Category category = findCategoryById(categoryId);
-            BoardsByCategoryResponseDto boardsByCategory = BoardsByCategoryResponseDto.builder()
+            PostListByCategoryResponseDto boardsByCategory = PostListByCategoryResponseDto.builder()
                     .categoryId(categoryId)
                     .categoryTitle(category.getTitle())
-                    .boards(selectBoards(states, category))
+                    .posts(selectPosts(states, category))
                     .build();
             return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "해당 카테고리 게시글 조회 성공! ", boardsByCategory);
         } catch (Exception e) {
@@ -112,18 +111,17 @@ public class CategoryServiceImpl implements CategoryService{
         }
     }
 
-    private List<BoardResponseDto> selectBoards(StatesEnum states, Category category) {
-        List<BoardResponseDto> boardResponses = new ArrayList<>();
-        List<Board> boards = boardRepository.findAllByStatesAndCategory(states, category);
-        for (Board board : boards) {
-            BoardResponseDto boardResponse = BoardResponseDto.builder()
-                    .id(board.getId())
-                    .title(board.getTitle())
-                    .states(board.getStates())
-                    .boardStatus(board.getBoardStatus())
-                    .updatedAt(board.getUpdatedAt())
+    private List<PostResponseDto> selectPosts(StatesEnum states, Category category) {
+        List<PostResponseDto> boardResponses = new ArrayList<>();
+        List<Post> posts = postRepository.findAllByStatesAndCategory(states, category);
+        for (Post post : posts) {
+            PostResponseDto postResponse = PostResponseDto.builder()
+                    .id(post.getId())
+                    .title(post.getTitle())
+                    .states(post.getStates())
+                    .updatedAt(post.getUpdatedAt())
                     .build();
-            boardResponses.add(boardResponse);
+            boardResponses.add(postResponse);
         }
         return boardResponses;
     }

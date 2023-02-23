@@ -1,7 +1,7 @@
 package com.example.good_match.domain.category.service;
 
 import com.example.good_match.domain.category.dto.request.InsertCategoryRequestDto;
-import com.example.good_match.domain.category.dto.response.BoardsByCategoryResponseDto;
+import com.example.good_match.domain.category.dto.response.PostListByCategoryResponseDto;
 import com.example.good_match.domain.category.dto.response.CategoryResponseDto;
 import com.example.good_match.domain.category.dto.response.SubCategoryResponseDto;
 import com.example.good_match.domain.category.model.Category;
@@ -21,7 +21,7 @@ public interface CategoryService {
 
     Category findCategoryById(Long categoryId);
 
-    ApiResponseDto<BoardsByCategoryResponseDto> selectBoardByCategory(Long categoryId, StatesEnum states);
+    ApiResponseDto<PostListByCategoryResponseDto> selectPostByCategory(Long categoryId, StatesEnum states);
 
 
 }

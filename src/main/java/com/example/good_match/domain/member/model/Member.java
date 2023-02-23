@@ -1,6 +1,6 @@
 package com.example.good_match.domain.member.model;
 
-import com.example.good_match.domain.board.domain.Board;
+import com.example.good_match.domain.post.domain.Post;
 import com.example.good_match.domain.comment.model.Comment;
 import com.example.good_match.global.util.BaseTimeEntity;
 import com.example.good_match.global.util.StatesEnum;
@@ -60,7 +60,7 @@ public class Member extends BaseTimeEntity {
 
     @JsonBackReference
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Board> boards = new ArrayList<>();
+    private List<Post> posts = new ArrayList<>();
 
     @JsonBackReference
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

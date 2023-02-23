@@ -15,5 +15,5 @@ public class MainResponseDto {
 
     List<CategoryResponseDto> categories;
 
-    List<BoardResponseDto> boards;
+    List<PostResponseDto> posts;
 }

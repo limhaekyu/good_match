@@ -1,4 +1,4 @@
-package com.example.good_match.domain.board.dto.request;
+package com.example.good_match.domain.post.dto.request;
 
 import com.example.good_match.global.util.StatesEnum;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class AddBoardRequestDto {
+public class AddPostRequestDto {
     private String title;
 
     private String contents;

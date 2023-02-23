@@ -1,13 +1,12 @@
 package com.example.good_match.domain.category.controller;
 
 import com.example.good_match.domain.category.dto.request.InsertCategoryRequestDto;
-import com.example.good_match.domain.category.dto.response.BoardsByCategoryResponseDto;
+import com.example.good_match.domain.category.dto.response.PostListByCategoryResponseDto;
 import com.example.good_match.domain.category.dto.response.CategoryResponseDto;
 import com.example.good_match.domain.category.dto.response.SubCategoryResponseDto;
 import com.example.good_match.domain.category.service.CategoryService;
 import com.example.good_match.global.response.ApiResponseDto;
 import com.example.good_match.global.util.StatesEnum;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -41,9 +40,9 @@ public class CategoryController {
     }
 
     @ApiOperation(value = "[카테고리] 카테고리별 게시글 조회")
-    @GetMapping("/{category-id}/boards")
-    public ApiResponseDto<BoardsByCategoryResponseDto> selectBoardByCategory(@PathVariable("category-id") Long categoryId, StatesEnum states) {
-        return categoryService.selectBoardByCategory(categoryId, states);
+    @GetMapping("/{category-id}/posts")
+    public ApiResponseDto<PostListByCategoryResponseDto> selectPostByCategory(@PathVariable("category-id") Long categoryId, StatesEnum states) {
+        return categoryService.selectPostByCategory(categoryId, states);
     }
 
 }

@@ -1,14 +1,13 @@
-package com.example.good_match.domain.board.service;
+package com.example.good_match.domain.post.service;
 
-import com.example.good_match.domain.board.domain.Board;
-import com.example.good_match.domain.board.domain.BoardStatus;
-import com.example.good_match.domain.board.dto.request.AddBoardRequestDto;
-import com.example.good_match.domain.board.dto.request.UpdateBoardRequestDto;
-import com.example.good_match.domain.board.dto.response.SelectBoardDetailResponseDto;
-import com.example.good_match.domain.board.repository.BoardRepository;
 import com.example.good_match.domain.category.repository.CategoryRepository;
 import com.example.good_match.domain.category.repository.SubCategoryRepository;
 import com.example.good_match.domain.member.service.MemberService;
+import com.example.good_match.domain.post.domain.Post;
+import com.example.good_match.domain.post.dto.request.AddPostRequestDto;
+import com.example.good_match.domain.post.dto.request.UpdatePostRequestDto;
+import com.example.good_match.domain.post.dto.response.SelectPostDetailResponseDto;
+import com.example.good_match.domain.post.repository.PostRepository;
 import com.example.good_match.global.response.ApiResponseDto;
 import com.example.good_match.global.response.ResponseStatusCode;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class BoardServiceImpl implements BoardService{
-    private final BoardRepository boardRepository;
+public class PostServiceImpl implements PostService {
+    private final PostRepository postRepository;
     private final MemberService memberService;
     private final CategoryRepository categoryRepository;
     private final SubCategoryRepository subCategoryRepository;
@@ -28,16 +27,15 @@ public class BoardServiceImpl implements BoardService{
         [매칭] 게임 게시글 등록
      */
     @Transactional
-    public ApiResponseDto insertBoard(AddBoardRequestDto addBoardRequestDto, User user) {
+    public ApiResponseDto insertPost(AddPostRequestDto addPostRequestDto, User user) {
         try{
-            boardRepository.save(Board.builder()
-                    .title(addBoardRequestDto.getTitle())
-                    .contents(addBoardRequestDto.getContents())
-                    .states(addBoardRequestDto.getStates())
-                    .boardStatus(BoardStatus.recruiting)
+            postRepository.save(Post.builder()
+                    .title(addPostRequestDto.getTitle())
+                    .contents(addPostRequestDto.getContents())
+                    .states(addPostRequestDto.getStates())
                     .member(memberService.findMemberByJwt(user))
-                    .category(categoryRepository.findById(addBoardRequestDto.getCategoryId()).orElseThrow(()->new IllegalArgumentException("없는 카테고리입니다.")))
-                    .subCategory(subCategoryRepository.findById(addBoardRequestDto.getSubCategoryId()).orElseThrow(()->new IllegalArgumentException("없는 서브 카테고리입니다.")))
+                    .category(categoryRepository.findById(addPostRequestDto.getCategoryId()).orElseThrow(()->new IllegalArgumentException("없는 카테고리입니다.")))
+                    .subCategory(subCategoryRepository.findById(addPostRequestDto.getSubCategoryId()).orElseThrow(()->new IllegalArgumentException("없는 서브 카테고리입니다.")))
                     .build());
             return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "게임 매칭 게시글 등록을 성공했습니다. ");
         } catch (Exception e){
@@ -50,19 +48,18 @@ public class BoardServiceImpl implements BoardService{
         [매칭] 게임 게시글 상세 조회
      */
     @Transactional
-    public ApiResponseDto selectBoardDetail(Long id) {
+    public ApiResponseDto selectPostDetail(Long id) {
         try {
-            Board board = findBoardById(id);
+            Post post = findPostById(id);
 
             return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "게임 매칭 게시글 상세 조회에 성공했습니다.",
-                    SelectBoardDetailResponseDto.builder()
-                            .title(board.getTitle())
-                            .contents(board.getContents())
-                            .states(board.getStates())
-                            .boardStatus(board.getBoardStatus())
-                            .updatedAt(board.getUpdatedAt())
-                            .memberId(board.getMember().getId())
-                            .memberName(board.getMember().getName())
+                    SelectPostDetailResponseDto.builder()
+                            .title(post.getTitle())
+                            .contents(post.getContents())
+                            .states(post.getStates())
+                            .updatedAt(post.getUpdatedAt())
+                            .memberId(post.getMember().getId())
+                            .memberName(post.getMember().getName())
                             .build()
             );
         } catch (Exception e) {
@@ -76,11 +73,11 @@ public class BoardServiceImpl implements BoardService{
      */
 
     @Transactional
-    public ApiResponseDto deleteBoard(Long id, User user) {
+    public ApiResponseDto deletePost(Long id, User user) {
         try {
-            Board board = findBoardById(id);
-            if (memberService.findMemberByJwt(user) == board.getMember() || user.getAuthorities().equals("ROLE_ADMIN")) {
-                boardRepository.delete(board);
+            Post post = findPostById(id);
+            if (memberService.findMemberByJwt(user) == post.getMember() || user.getAuthorities().equals("ROLE_ADMIN")) {
+                postRepository.delete(post);
                 return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "게임 매칭 게시글을 삭제했습니다.");
             } else {
                 return ApiResponseDto.of(ResponseStatusCode.UNAUTHORIZED.getValue(), "해당 사용자의 게임 메칭 게시글이 아닙니다.");
@@ -95,8 +92,8 @@ public class BoardServiceImpl implements BoardService{
         [매칭] 게임 게시글 찾기 (with. index id)
      */
 
-    private Board findBoardById(Long id) {
-        return boardRepository.findById(id).orElseThrow( ()-> new IllegalArgumentException("없는 게임 매칭 게시글입니다.") );
+    private Post findPostById(Long id) {
+        return postRepository.findById(id).orElseThrow( ()-> new IllegalArgumentException("없는 게임 매칭 게시글입니다.") );
     }
 
     /*
@@ -104,14 +101,14 @@ public class BoardServiceImpl implements BoardService{
      */
 
     @Transactional
-    public ApiResponseDto updateBoard(Long id, UpdateBoardRequestDto updateBoardRequestDto, User user) {
+    public ApiResponseDto updatePost(Long id, UpdatePostRequestDto updatePostRequestDto, User user) {
         try {
-            Board board = findBoardById(id);
+            Post post = findPostById(id);
 
-            if (memberService.findMemberByJwt(user) == board.getMember() || user.getAuthorities().equals("ROLE_ADMIN")) {
+            if (memberService.findMemberByJwt(user) == post.getMember() || user.getAuthorities().equals("ROLE_ADMIN")) {
 
-                board.updateBoard(updateBoardRequestDto.getTitle(), updateBoardRequestDto.getContents(), updateBoardRequestDto.getStates());
-                boardRepository.save(board);
+                post.updatePost(updatePostRequestDto.getTitle(), updatePostRequestDto.getContents(), updatePostRequestDto.getStates());
+                postRepository.save(post);
 
                 return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "게임 매칭 게시글 수정을 완료했습니다.");
             } else {

@@ -19,8 +19,8 @@ public class BoardController {
 
     @ApiOperation(value = "[게시글] 게시글 등록")
     @PostMapping("")
-    public ApiResponseDto addGame(@AuthenticationPrincipal User user, @RequestBody AddBoardRequestDto addBoardRequestDto) {
-        return boardService.addBoard(addBoardRequestDto, user);
+    public ApiResponseDto insertBoard(@AuthenticationPrincipal User user, @RequestBody AddBoardRequestDto addBoardRequestDto) {
+        return boardService.insertBoard(addBoardRequestDto, user);
     }
 
     @ApiOperation(value = "[게시글] 게시글 상세조회")

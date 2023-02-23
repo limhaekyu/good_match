@@ -6,6 +6,8 @@ import com.example.good_match.domain.board.dto.request.AddBoardRequestDto;
 import com.example.good_match.domain.board.dto.request.UpdateBoardRequestDto;
 import com.example.good_match.domain.board.dto.response.SelectBoardDetailResponseDto;
 import com.example.good_match.domain.board.repository.BoardRepository;
+import com.example.good_match.domain.category.repository.CategoryRepository;
+import com.example.good_match.domain.category.repository.SubCategoryRepository;
 import com.example.good_match.domain.member.service.MemberService;
 import com.example.good_match.global.response.ApiResponseDto;
 import com.example.good_match.global.response.ResponseStatusCode;
@@ -19,12 +21,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class BoardServiceImpl implements BoardService{
     private final BoardRepository boardRepository;
     private final MemberService memberService;
+    private final CategoryRepository categoryRepository;
+    private final SubCategoryRepository subCategoryRepository;
 
     /*
         [매칭] 게임 게시글 등록
      */
     @Transactional
-    public ApiResponseDto addBoard(AddBoardRequestDto addBoardRequestDto, User user) {
+    public ApiResponseDto insertBoard(AddBoardRequestDto addBoardRequestDto, User user) {
         try{
             boardRepository.save(Board.builder()
                     .title(addBoardRequestDto.getTitle())
@@ -32,6 +36,8 @@ public class BoardServiceImpl implements BoardService{
                     .states(addBoardRequestDto.getStates())
                     .boardStatus(BoardStatus.recruiting)
                     .member(memberService.findMemberByJwt(user))
+                    .category(categoryRepository.findById(addBoardRequestDto.getCategoryId()).orElseThrow(()->new IllegalArgumentException("없는 카테고리입니다.")))
+                    .subCategory(subCategoryRepository.findById(addBoardRequestDto.getSubCategoryId()).orElseThrow(()->new IllegalArgumentException("없는 서브 카테고리입니다.")))
                     .build());
             return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "게임 매칭 게시글 등록을 성공했습니다. ");
         } catch (Exception e){

@@ -6,7 +6,7 @@ import com.example.good_match.global.response.ApiResponseDto;
 import org.springframework.security.core.userdetails.User;
 public interface BoardService {
 
-    public ApiResponseDto addBoard(AddBoardRequestDto addBoardRequestDto, User user);
+    public ApiResponseDto insertBoard(AddBoardRequestDto addBoardRequestDto, User user);
 
     public ApiResponseDto selectBoardDetail(Long id);
 

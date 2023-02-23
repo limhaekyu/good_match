@@ -14,4 +14,8 @@ public class AddBoardRequestDto {
     private String contents;
 
     private StatesEnum states;
+
+    private Long categoryId;
+
+    private Long subCategoryId;
 }

@@ -24,4 +24,6 @@ public interface MemberService {
     public ApiResponseDto<FindIdResponseDto> findId(FindIdRequestDto findIdRequestDto);
 
     public Member findMemberByJwt(User user);
+
+    ApiResponseDto deleteMember(User user);
 }

@@ -9,6 +9,8 @@ import com.example.good_match.domain.member.service.MemberService;
 import com.example.good_match.global.response.ApiResponseDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -40,5 +42,11 @@ public class MemberController {
     @PostMapping("/find-id")
     public ApiResponseDto<FindIdResponseDto> findId(@RequestBody FindIdRequestDto findIdRequestDto){
         return memberService.findId(findIdRequestDto);
+    }
+
+    @ApiOperation(value = "[회원] 회원 탈퇴")
+    @DeleteMapping("/member")
+    public ApiResponseDto deleteMember(@AuthenticationPrincipal User user) {
+        return memberService.deleteMember(user);
     }
 }

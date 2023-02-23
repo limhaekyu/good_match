@@ -159,4 +159,17 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.findById(Long.valueOf(user.getUsername())).orElseThrow( () -> new UsernameNotFoundException("일치하는 유저가 없습니다.") );
     }
 
+    /*
+        회원 탈퇴
+    */
+    @Transactional
+    public ApiResponseDto deleteMember(User user) {
+        try {
+            Member member = findMemberByJwt(user);
+            member.deleteMember();
+            return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "회원 탈퇴를 성공했습니다.");
+        } catch (Exception e) {
+            return ApiResponseDto.of(ResponseStatusCode.INTERNAL_SERVER_ERROR.getValue(), "회원 탈퇴에 실패했습니다. " + e.getMessage());
+        }
+    }
 }

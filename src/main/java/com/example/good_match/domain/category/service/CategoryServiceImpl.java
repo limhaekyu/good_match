@@ -2,6 +2,7 @@ package com.example.good_match.domain.category.service;
 
 import com.example.good_match.domain.board.domain.Board;
 import com.example.good_match.domain.board.repository.BoardRepository;
+import com.example.good_match.domain.category.dto.request.InsertCategoryRequestDto;
 import com.example.good_match.domain.category.dto.response.BoardResponseDto;
 import com.example.good_match.domain.category.dto.response.BoardsByCategoryResponseDto;
 import com.example.good_match.domain.category.dto.response.CategoryResponseDto;
@@ -13,7 +14,9 @@ import com.example.good_match.domain.category.repository.SubCategoryRepository;
 import com.example.good_match.global.response.ApiResponseDto;
 import com.example.good_match.global.response.ResponseStatusCode;
 import com.example.good_match.global.util.StatesEnum;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +29,34 @@ public class CategoryServiceImpl implements CategoryService{
     private final SubCategoryRepository subCategoryRepository;
     private final BoardRepository boardRepository;
 
+
+    /*
+        카테고리 등록
+    */
+
+    @Override
+    public ApiResponseDto insertCategory(User user, InsertCategoryRequestDto insertCategoryRequest) {
+        try {
+            if (!categoryRepository.existsByTitle(insertCategoryRequest.getTitle())) {
+                Category category = Category.builder()
+                        .title(insertCategoryRequest.getTitle())
+                        .build();
+                categoryRepository.save(category);
+
+                for (String subCategory : insertCategoryRequest.getSubCategories()) {
+                    subCategoryRepository.save(SubCategory.builder()
+                            .subCategoryTitle(subCategory)
+                            .category(category)
+                            .build());
+                }
+                return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "카테고리 등록에 성공했습니다.");
+            } else {
+                return ApiResponseDto.of(ResponseStatusCode.REGISTERED.getValue(), "이미 등록된 카테고리입니다.");
+            }
+        } catch (Exception e) {
+            return ApiResponseDto.of(ResponseStatusCode.INTERNAL_SERVER_ERROR.getValue(), "카테고리 등록에 실패했습니다. " + e.getMessage());
+        }
+    }
 
     /*
         전체 카테고리 리스트 호출

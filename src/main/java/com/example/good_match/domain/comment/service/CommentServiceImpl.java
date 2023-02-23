@@ -1,7 +1,7 @@
 package com.example.good_match.domain.comment.service;
 
-import com.example.good_match.domain.board.repository.BoardRepository;
-import com.example.good_match.domain.comment.dto.request.AddCommentRequestDto;
+import com.example.good_match.domain.post.repository.PostRepository;
+import com.example.good_match.domain.comment.dto.request.InsertCommentRequestDto;
 import com.example.good_match.domain.comment.dto.request.UpdateCommentRequestDto;
 import com.example.good_match.domain.comment.model.Comment;
 import com.example.good_match.domain.comment.repository.CommentRepository;
@@ -21,16 +21,16 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
 
     private final MemberService memberService;
-    private final BoardRepository boardRepository;
+    private final PostRepository postRepository;
 
     @Transactional
-    public ApiResponseDto addComment(AddCommentRequestDto addCommentRequestDto, User user) {
+    public ApiResponseDto insertComment(InsertCommentRequestDto insertCommentRequestDto, User user) {
         try {
             commentRepository.save(
                     Comment.builder()
-                            .contents(addCommentRequestDto.getContents())
+                            .contents(insertCommentRequestDto.getContents())
                             .member(memberService.findMemberByJwt(user))
-                            .board(boardRepository.findById(addCommentRequestDto.getBoardId()).orElseThrow(
+                            .post(postRepository.findById(insertCommentRequestDto.getPostId()).orElseThrow(
                                     ()->new IllegalArgumentException("게시글을 찾을 수 없습니다.")))
                             .build()
             );

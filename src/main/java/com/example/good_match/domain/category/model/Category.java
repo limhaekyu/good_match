@@ -1,17 +1,15 @@
 package com.example.good_match.domain.category.model;
 
-import com.example.good_match.domain.board.domain.Board;
+import com.example.good_match.domain.post.domain.Post;
 import com.example.good_match.global.util.BaseTimeEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Builder
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "category")
 public class Category extends BaseTimeEntity {
     @Id
@@ -36,6 +35,6 @@ public class Category extends BaseTimeEntity {
 
     @JsonBackReference
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Board> boards = new ArrayList<>();
+    private List<Post> posts = new ArrayList<>();
 
 }

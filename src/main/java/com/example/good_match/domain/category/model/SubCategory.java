@@ -1,17 +1,14 @@
 package com.example.good_match.domain.category.model;
 
-import com.example.good_match.domain.board.domain.Board;
+import com.example.good_match.domain.post.domain.Post;
 import com.example.good_match.global.util.BaseTimeEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +33,7 @@ public class SubCategory extends BaseTimeEntity {
 
     @JsonBackReference
     @OneToMany(mappedBy = "subCategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Board> boards = new ArrayList<>();
+    private List<Post> posts = new ArrayList<>();
 
 
 }

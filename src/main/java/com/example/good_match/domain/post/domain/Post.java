@@ -1,4 +1,4 @@
-package com.example.good_match.domain.board.domain;
+package com.example.good_match.domain.post.domain;
 
 import com.example.good_match.domain.category.model.Category;
 import com.example.good_match.domain.category.model.SubCategory;
@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,12 +23,12 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Builder
-@Table(name = "board")
+@Table(name = "post")
 @EntityListeners(AuditingEntityListener.class)
-public class Board extends BaseTimeEntity {
+public class Post extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "game_id")
+    @Column(name = "post_id")
     private Long id;
 
     @Column(name = "title")
@@ -39,12 +40,14 @@ public class Board extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private StatesEnum states;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "board_status")
-    private BoardStatus boardStatus;
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
     @JsonBackReference
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -59,7 +62,7 @@ public class Board extends BaseTimeEntity {
     @JoinColumn(name = "sub_category_id")
     private SubCategory subCategory;
 
-    public void updateBoard(String title, String contents, StatesEnum states) {
+    public void updatePost(String title, String contents, StatesEnum states) {
         this.title = title;
         this.contents = contents;
         this.states = states;

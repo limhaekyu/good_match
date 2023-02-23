@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Builder
-public class MainResponseDto {
-
-    List<CategoryResponseDto> categories;
-
+public class PostListByCategoryResponseDto {
+    private Long categoryId;
+    private String categoryTitle;
     List<PostResponseDto> posts;
 }

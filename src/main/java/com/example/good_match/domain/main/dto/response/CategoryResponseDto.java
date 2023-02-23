@@ -11,9 +11,10 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Builder
-public class MainResponseDto {
+public class CategoryResponseDto {
+    private Long id;
 
-    List<CategoryResponseDto> categories;
+    private String title;
 
-    List<PostResponseDto> posts;
+    private List<MainSubCategoryDto> subCategories;
 }

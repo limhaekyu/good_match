@@ -1,5 +1,6 @@
 package com.example.good_match.domain.category.service;
 
+import com.example.good_match.domain.member.service.MemberService;
 import com.example.good_match.domain.post.domain.Post;
 import com.example.good_match.domain.post.repository.PostRepository;
 import com.example.good_match.domain.category.dto.request.InsertCategoryRequestDto;
@@ -28,14 +29,16 @@ public class CategoryServiceImpl implements CategoryService{
     private final SubCategoryRepository subCategoryRepository;
     private final PostRepository postRepository;
 
+    private final MemberService memberService;
 
     /*
         카테고리 등록
     */
 
     @Override
-    public ApiResponseDto insertCategory(User user, InsertCategoryRequestDto insertCategoryRequest) {
+    public ApiResponseDto insertCategory(Long memberId, InsertCategoryRequestDto insertCategoryRequest) {
         try {
+
             if (!categoryRepository.existsByTitle(insertCategoryRequest.getTitle())) {
                 Category category = Category.builder()
                         .title(insertCategoryRequest.getTitle())

@@ -6,11 +6,11 @@ import com.example.good_match.global.response.ApiResponseDto;
 import org.springframework.security.core.userdetails.User;
 public interface PostService {
 
-    public ApiResponseDto insertPost(AddPostRequestDto addPostRequestDto, User user);
+    public ApiResponseDto insertPost(AddPostRequestDto addPostRequestDto, Long memberId);
 
     public ApiResponseDto selectPostDetail(Long id);
 
-    public ApiResponseDto deletePost(Long id, User user);
+    public ApiResponseDto deletePost(Long id, Long memberId);
 
-    public ApiResponseDto updatePost(Long id, UpdatePostRequestDto updatePostRequestDto, User user);
+    public ApiResponseDto updatePost(Long id, UpdatePostRequestDto updatePostRequestDto, Long memberId);
 }

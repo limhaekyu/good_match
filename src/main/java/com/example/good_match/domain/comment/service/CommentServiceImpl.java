@@ -24,12 +24,12 @@ public class CommentServiceImpl implements CommentService {
     private final PostRepository postRepository;
 
     @Transactional
-    public ApiResponseDto insertComment(InsertCommentRequestDto insertCommentRequestDto, User user) {
+    public ApiResponseDto insertComment(InsertCommentRequestDto insertCommentRequestDto, Long memberId) {
         try {
             commentRepository.save(
                     Comment.builder()
                             .contents(insertCommentRequestDto.getContents())
-                            .member(memberService.findMemberByJwt(user))
+                            .member(memberService.findMemberById(memberId))
                             .post(postRepository.findById(insertCommentRequestDto.getPostId()).orElseThrow(
                                     ()->new IllegalArgumentException("게시글을 찾을 수 없습니다.")))
                             .build()
@@ -41,10 +41,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Transactional
-    public ApiResponseDto updateComment(User user, Long commentId, UpdateCommentRequestDto updateCommentRequestDto) {
+    public ApiResponseDto updateComment(Long memberId, Long commentId, UpdateCommentRequestDto updateCommentRequestDto) {
         try {
             Comment comment = this.findCommentById(commentId);
-            if (comment.getMember().equals(memberService.findMemberByJwt(user))){
+            if (comment.getMember().equals(memberService.findMemberById(memberId))){
                 comment.update(
                         updateCommentRequestDto.getContents()
                 );
@@ -56,10 +56,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Transactional
-    public ApiResponseDto cancelComment(User user, Long commentId) {
+    public ApiResponseDto cancelComment(Long memberId, Long commentId) {
         try {
             Comment comment = this.findCommentById(commentId);
-            Member member = memberService.findMemberByJwt(user);
+            Member member = memberService.findMemberById(memberId);
 
             if (member.getAuthority() == Authority.ROLE_ADMIN || member.equals(comment.getMember())) {
                 commentRepository.delete(comment);

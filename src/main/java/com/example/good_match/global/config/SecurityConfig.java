@@ -32,17 +32,11 @@ public class SecurityConfig {
                 .antMatchers("/api/login","/api/sign-up","/api/reissue","/api/find-id").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/anonymous*").anonymous()
-                .anyRequest().authenticated();
+                .anyRequest().permitAll();
 
         http
-                .formLogin()
-                .defaultSuccessUrl("/", true)
-                .and()
-                .logout()
-                .logoutUrl("/logout");
-
-        http
-                .csrf().disable()
+                .formLogin().disable()
+                .logout().disable()
                 .cors().configurationSource(
                         request -> {
                             CorsConfiguration cors = new CorsConfiguration();

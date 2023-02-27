@@ -1,6 +1,7 @@
 package com.example.good_match.domain.member.service;
 
 import com.example.good_match.domain.member.dto.request.FindIdRequestDto;
+import com.example.good_match.domain.member.dto.request.LoginRequestDto;
 import com.example.good_match.domain.member.dto.request.SignUpRequestDto;
 import com.example.good_match.domain.member.dto.response.FindIdResponseDto;
 import com.example.good_match.domain.member.model.Authority;
@@ -9,9 +10,7 @@ import com.example.good_match.domain.member.repository.MemberRepository;
 import com.example.good_match.global.response.ApiResponseDto;
 import com.example.good_match.global.response.ResponseStatusCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,9 +21,6 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
-
-    private final RedisTemplate<String, String> redisTemplate;
     /*
         회원가입
      */
@@ -83,13 +79,34 @@ public class MemberServiceImpl implements MemberService {
         회원 탈퇴
     */
     @Transactional
-    public ApiResponseDto deleteMember(User user) {
+    public ApiResponseDto deleteMember(Long memberId) {
         try {
-            Member member = findMemberByJwt(user);
+            Member member = findMemberById(memberId);
             member.deleteMember();
             return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "회원 탈퇴를 성공했습니다.");
         } catch (Exception e) {
             return ApiResponseDto.of(ResponseStatusCode.INTERNAL_SERVER_ERROR.getValue(), "회원 탈퇴에 실패했습니다. " + e.getMessage());
         }
+    }
+
+    /*
+        로그인 회원 검증
+    */
+    @Override
+    public Long isValidMember(LoginRequestDto loginRequestDto) {
+        Member member = findByEmail(loginRequestDto.getEmail());
+        if (!passwordEncoder.matches(loginRequestDto.getPassword(), member.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        } else {
+            return member.getId();
+        }
+    }
+
+    @Override
+    public Member findMemberById(Long memberId) {
+        return memberRepository.findById(memberId).orElseThrow( () -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+    }
+    private Member findByEmail(String email) {
+        return memberRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
     }
 }

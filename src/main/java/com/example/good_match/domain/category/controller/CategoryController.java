@@ -5,6 +5,7 @@ import com.example.good_match.domain.category.dto.response.PostListByCategoryRes
 import com.example.good_match.domain.category.dto.response.CategoryResponseDto;
 import com.example.good_match.domain.category.dto.response.SubCategoryResponseDto;
 import com.example.good_match.domain.category.service.CategoryService;
+import com.example.good_match.global.annotation.CurrentMemberId;
 import com.example.good_match.global.response.ApiResponseDto;
 import com.example.good_match.global.util.StatesEnum;
 import io.swagger.annotations.ApiOperation;
@@ -23,8 +24,8 @@ public class CategoryController {
 
     @ApiOperation(value = "[카테고리] 카테고리 등록")
     @PostMapping("")
-    public ApiResponseDto insertCategory(@AuthenticationPrincipal User user, @RequestBody InsertCategoryRequestDto insertCategoryRequest) {
-        return categoryService.insertCategory(user, insertCategoryRequest);
+    public ApiResponseDto insertCategory(@CurrentMemberId Long memberId, @RequestBody InsertCategoryRequestDto insertCategoryRequest) {
+        return categoryService.insertCategory(memberId, insertCategoryRequest);
     }
 
     @ApiOperation(value = "[카테고리] 전체 카테고리 리스트")

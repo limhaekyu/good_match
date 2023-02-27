@@ -1,16 +1,21 @@
 package com.example.good_match.domain.member.service;
 
 import com.example.good_match.domain.member.dto.request.FindIdRequestDto;
+import com.example.good_match.domain.member.dto.request.LoginRequestDto;
 import com.example.good_match.domain.member.dto.request.SignUpRequestDto;
 import com.example.good_match.domain.member.dto.response.FindIdResponseDto;
+import com.example.good_match.domain.member.model.Member;
 import com.example.good_match.global.response.ApiResponseDto;
-import org.springframework.security.core.userdetails.User;
 
 public interface MemberService {
 
-    public ApiResponseDto signUpMember(SignUpRequestDto signUpRequestDto);
+    ApiResponseDto signUpMember(SignUpRequestDto signUpRequestDto);
 
-    public ApiResponseDto<FindIdResponseDto> findId(FindIdRequestDto findIdRequestDto);
+    ApiResponseDto<FindIdResponseDto> findId(FindIdRequestDto findIdRequestDto);
 
-    ApiResponseDto deleteMember(User user);
+    ApiResponseDto deleteMember(Long memberId);
+
+    Long isValidMember(LoginRequestDto loginRequestDto);
+
+    Member findMemberById(Long memberId);
 }

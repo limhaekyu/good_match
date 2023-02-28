@@ -3,12 +3,15 @@ package com.example.good_match.global.config;
 import com.example.good_match.global.interceptor.AuthInterceptor;
 import com.example.good_match.global.interceptor.LoginInterceptor;
 import com.example.good_match.global.util.CurrentMemberIdResolver;
+import com.example.good_match.global.util.SessionListener;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.servlet.http.HttpSessionListener;
 import java.util.List;
 
 @Configuration
@@ -29,4 +32,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         resolvers.add(currentMemberIdResolver);
     }
 
+    @Bean
+    public HttpSessionListener httpSessionListener() {
+        return new SessionListener();
+    }
 }

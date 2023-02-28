@@ -18,6 +18,7 @@ import com.example.good_match.global.util.StatesEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class CategoryServiceImpl implements CategoryService{
         카테고리 등록
     */
 
+    @Transactional
     @Override
     public ApiResponseDto insertCategory(Long memberId, InsertCategoryRequestDto insertCategoryRequest) {
         try {

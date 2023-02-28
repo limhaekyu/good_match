@@ -1,5 +1,6 @@
 package com.example.good_match.global.config;
 
+import com.example.good_match.global.interceptor.AuthInterceptor;
 import com.example.good_match.global.interceptor.LoginInterceptor;
 import com.example.good_match.global.util.CurrentMemberIdResolver;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +15,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
     private final LoginInterceptor loginInterceptor;
+    private final AuthInterceptor authInterceptor;
     private final CurrentMemberIdResolver currentMemberIdResolver;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor);
+        registry.addInterceptor(authInterceptor);
     }
 
     @Override

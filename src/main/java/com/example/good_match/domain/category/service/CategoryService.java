@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface CategoryService {
 
-    ApiResponseDto insertCategory(User user, InsertCategoryRequestDto insertCategoryRequest);
+    ApiResponseDto insertCategory(Long memberId, InsertCategoryRequestDto insertCategoryRequest);
 
     ApiResponseDto<List<CategoryResponseDto>> selectCategoryList();
 

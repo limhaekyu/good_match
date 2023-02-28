@@ -3,6 +3,8 @@ package com.example.good_match.domain.comment.controller;
 import com.example.good_match.domain.comment.dto.request.InsertCommentRequestDto;
 import com.example.good_match.domain.comment.dto.request.UpdateCommentRequestDto;
 import com.example.good_match.domain.comment.service.CommentService;
+import com.example.good_match.global.annotation.CurrentMemberId;
+import com.example.good_match.global.annotation.LoginRequired;
 import com.example.good_match.global.response.ApiResponseDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -17,21 +19,24 @@ public class CommentController {
     private final CommentService commentService;
 
     @ApiOperation(value = "[댓글] 댓글 등록")
+    @LoginRequired
     @PostMapping("")
-    public ApiResponseDto insertComment(@AuthenticationPrincipal User user, @RequestBody InsertCommentRequestDto insertCommentRequestDto) {
-        return commentService.insertComment(insertCommentRequestDto, user);
+    public ApiResponseDto insertComment(@CurrentMemberId Long memberId, @RequestBody InsertCommentRequestDto insertCommentRequestDto) {
+        return commentService.insertComment(insertCommentRequestDto, memberId);
     }
 
     @ApiOperation(value = "[댓글] 댓글 수정")
+    @LoginRequired
     @PutMapping("/{id}")
-    public ApiResponseDto updateComment(@AuthenticationPrincipal User user, @PathVariable("id") Long commentId, @RequestBody UpdateCommentRequestDto updateCommentRequestDto) {
-        return commentService.updateComment(user, commentId, updateCommentRequestDto);
+    public ApiResponseDto updateComment(@CurrentMemberId Long memberId, @PathVariable("id") Long commentId, @RequestBody UpdateCommentRequestDto updateCommentRequestDto) {
+        return commentService.updateComment(memberId, commentId, updateCommentRequestDto);
     }
 
     @ApiOperation(value = "[댓글] 댓글 삭제")
+    @LoginRequired
     @DeleteMapping("/{id}")
-    public ApiResponseDto cancelComment(@AuthenticationPrincipal User user, @PathVariable("id") Long commentId) {
-        return commentService.cancelComment(user, commentId);
+    public ApiResponseDto cancelComment(@CurrentMemberId Long memberId, @PathVariable("id") Long commentId) {
+        return commentService.cancelComment(memberId, commentId);
     }
 }
 

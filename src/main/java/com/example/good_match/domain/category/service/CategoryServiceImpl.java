@@ -1,5 +1,6 @@
 package com.example.good_match.domain.category.service;
 
+import com.example.good_match.domain.member.service.MemberService;
 import com.example.good_match.domain.post.domain.Post;
 import com.example.good_match.domain.post.repository.PostRepository;
 import com.example.good_match.domain.category.dto.request.InsertCategoryRequestDto;
@@ -17,6 +18,7 @@ import com.example.good_match.global.util.StatesEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,14 +30,17 @@ public class CategoryServiceImpl implements CategoryService{
     private final SubCategoryRepository subCategoryRepository;
     private final PostRepository postRepository;
 
+    private final MemberService memberService;
 
     /*
         카테고리 등록
     */
 
+    @Transactional
     @Override
-    public ApiResponseDto insertCategory(User user, InsertCategoryRequestDto insertCategoryRequest) {
+    public ApiResponseDto insertCategory(Long memberId, InsertCategoryRequestDto insertCategoryRequest) {
         try {
+
             if (!categoryRepository.existsByTitle(insertCategoryRequest.getTitle())) {
                 Category category = Category.builder()
                         .title(insertCategoryRequest.getTitle())

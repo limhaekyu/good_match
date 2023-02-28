@@ -65,4 +65,9 @@ public class Member extends BaseTimeEntity {
     @JsonBackReference
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
+
+    public void deleteMember() {
+        this.deletedAt = LocalDateTime.now();
+        this.isDeleted = true;
+    }
 }

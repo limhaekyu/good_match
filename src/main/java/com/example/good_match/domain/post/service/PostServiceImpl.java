@@ -2,6 +2,7 @@ package com.example.good_match.domain.post.service;
 
 import com.example.good_match.domain.category.repository.CategoryRepository;
 import com.example.good_match.domain.category.repository.SubCategoryRepository;
+import com.example.good_match.domain.member.model.Member;
 import com.example.good_match.domain.member.service.MemberService;
 import com.example.good_match.domain.post.domain.Post;
 import com.example.good_match.domain.post.dto.request.AddPostRequestDto;
@@ -11,7 +12,6 @@ import com.example.good_match.domain.post.repository.PostRepository;
 import com.example.good_match.global.response.ApiResponseDto;
 import com.example.good_match.global.response.ResponseStatusCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,13 +27,13 @@ public class PostServiceImpl implements PostService {
         [매칭] 게임 게시글 등록
      */
     @Transactional
-    public ApiResponseDto insertPost(AddPostRequestDto addPostRequestDto, User user) {
+    public ApiResponseDto insertPost(AddPostRequestDto addPostRequestDto, Long memberId) {
         try{
             postRepository.save(Post.builder()
                     .title(addPostRequestDto.getTitle())
                     .contents(addPostRequestDto.getContents())
                     .states(addPostRequestDto.getStates())
-                    .member(memberService.findMemberByJwt(user))
+                    .member(memberService.findMemberById(memberId))
                     .category(categoryRepository.findById(addPostRequestDto.getCategoryId()).orElseThrow(()->new IllegalArgumentException("없는 카테고리입니다.")))
                     .subCategory(subCategoryRepository.findById(addPostRequestDto.getSubCategoryId()).orElseThrow(()->new IllegalArgumentException("없는 서브 카테고리입니다.")))
                     .build());
@@ -73,10 +73,11 @@ public class PostServiceImpl implements PostService {
      */
 
     @Transactional
-    public ApiResponseDto deletePost(Long id, User user) {
+    public ApiResponseDto deletePost(Long id, Long memberId) {
         try {
             Post post = findPostById(id);
-            if (memberService.findMemberByJwt(user) == post.getMember() || user.getAuthorities().equals("ROLE_ADMIN")) {
+            Member member = memberService.findMemberById(memberId);
+            if (member == post.getMember() || member.getAuthority().equals("ROLE_ADMIN")) {
                 postRepository.delete(post);
                 return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "게임 매칭 게시글을 삭제했습니다.");
             } else {
@@ -101,11 +102,11 @@ public class PostServiceImpl implements PostService {
      */
 
     @Transactional
-    public ApiResponseDto updatePost(Long id, UpdatePostRequestDto updatePostRequestDto, User user) {
+    public ApiResponseDto updatePost(Long id, UpdatePostRequestDto updatePostRequestDto, Long memberId) {
         try {
             Post post = findPostById(id);
-
-            if (memberService.findMemberByJwt(user) == post.getMember() || user.getAuthorities().equals("ROLE_ADMIN")) {
+            Member member = memberService.findMemberById(memberId);
+            if (member == post.getMember() || member.getAuthority().equals("ROLE_ADMIN")) {
 
                 post.updatePost(updatePostRequestDto.getTitle(), updatePostRequestDto.getContents(), updatePostRequestDto.getStates());
                 postRepository.save(post);

@@ -1,23 +1,26 @@
 package com.example.good_match.domain.chat.controller;
 
-import lombok.extern.log4j.Log4j2;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import com.example.good_match.domain.chat.model.ChatRoom;
+import com.example.good_match.domain.chat.service.MessageService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
-@Log4j2
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/chat")
 public class ChatController {
 
-    @GetMapping("/chat")
-    public String chatGet(){
+    private final MessageService msgService;
 
-        log.info("@ChatController, chat GET()");
-
-        return "chat";
+    @PostMapping("")
+    public ChatRoom creatRoom(@RequestParam String name) {
+        return msgService.createRoom(name);
     }
 
-    @GetMapping("/")
-    public String index() {
-        return "index";
+    @GetMapping("")
+    public List<ChatRoom> findAllRoom() {
+        return msgService.findAllRoom();
     }
 }

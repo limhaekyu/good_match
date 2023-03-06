@@ -1,8 +1,8 @@
 package com.example.good_match.global.handler;
 
+import com.example.good_match.domain.chat.model.ChatMessage;
 import com.example.good_match.domain.chat.model.ChatRoom;
-import com.example.good_match.domain.chat.model.Message;
-import com.example.good_match.domain.chat.service.MessageService;
+import com.example.good_match.domain.chat.service.ChatService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,21 +12,19 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
-public class ChatWebSocketHandler extends TextWebSocketHandler {
-
-    private final MessageService msgService;
+@Component
+public class WebSocketChatHandler extends TextWebSocketHandler {
     private final ObjectMapper objectMapper;
+    private final ChatService chatService;
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
-        log.info("payload : {}", payload);
+        log.info("payload {}", payload);
 
-        Message msg = objectMapper.readValue(payload, Message.class);
-        ChatRoom room = msgService.findById(msg.getRoomId());
-        log.info("MessageType : " + msg.getMessageType());
-        room.handleActions(session, msg, msgService);
+        ChatMessage chatMessage = objectMapper.readValue(payload, ChatMessage.class);
+        ChatRoom room = chatService.findRoomById(chatMessage.getRoomId());
+        room.handleActions(session, chatMessage, chatService);
     }
 }

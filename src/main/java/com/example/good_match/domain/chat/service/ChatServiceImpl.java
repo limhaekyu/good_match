@@ -10,43 +10,40 @@ import org.springframework.web.socket.WebSocketSession;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
-@Service
 @RequiredArgsConstructor
-public class MessageServiceImpl implements MessageService {
-    private final ObjectMapper objectMapper;
+@Service
+public class ChatServiceImpl implements ChatService {
 
-    Map<String, ChatRoom> chatRooms;
+    private final ObjectMapper objectMapper;
+    private Map<String, ChatRoom> chatRooms;
 
     @PostConstruct
     private void init() {
         chatRooms = new LinkedHashMap<>();
     }
 
-    @Override
     public List<ChatRoom> findAllRoom() {
         return new ArrayList<>(chatRooms.values());
     }
 
-    @Override
-    public ChatRoom findById(String roomId) {
+    public ChatRoom findRoomById(String roomId) {
         return chatRooms.get(roomId);
     }
 
-    @Override
+
     public ChatRoom createRoom(String name) {
-        String roomId = name;
-        ChatRoom room = ChatRoom.builder().roomId(roomId).build();
-        chatRooms.put(roomId, room);
-        return room;
+        String randomId = UUID.randomUUID().toString();
+        ChatRoom chatRoom = ChatRoom.builder()
+                .roomId(randomId)
+                .name(name)
+                .build();
+        chatRooms.put(randomId, chatRoom);
+        return chatRoom;
     }
 
-    @Override
     public <T> void sendMessage(WebSocketSession session, T message) {
         try {
             session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));

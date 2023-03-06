@@ -44,22 +44,20 @@ dependencies {
     // WebSocket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
-
-    // freemarker, vue, bootstrap (front)
+    // freemarker, vue, bootstrap , axios(front)
     implementation 'org.springframework.boot:spring-boot-starter-freemarker'
     implementation 'org.webjars.bower:bootstrap:4.3.1'
     implementation 'org.webjars.bower:vue:2.5.16'
-//    implementation 'org.webjars.bower:axios'
-
+    implementation 'org.webjars.bower:axios:0.17.1'
 
     // sockjs
-    implementation 'org.webjars:sockjs-client:1.5.1'
+    implementation 'org.webjars:sockjs-client:1.1.2'
 
     // stomp
-    implementation 'org.webjars:stomp-websocket:2.3.4'
+    implementation 'org.webjars:stomp-websocket:2.3.3-1'
 
     // gson
-    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'com.google.code.gson:gson:2.8.0'
 
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'

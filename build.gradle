@@ -19,20 +19,45 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-web-services'
-    compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    implementation 'mysql:mysql-connector-java'
-    annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 
-    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5',
-            'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    // spring security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // OAuth2
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+    // spring boot JPA
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // mysql
+    implementation 'mysql:mysql-connector-java'
+
+    // lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // WebSocket
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    // freemarker, vue, bootstrap , axios(front)
+    implementation 'org.springframework.boot:spring-boot-starter-freemarker'
+    implementation 'org.webjars.bower:bootstrap:4.3.1'
+    implementation 'org.webjars.bower:vue:2.5.16'
+    implementation 'org.webjars.bower:axios:0.17.1'
+
+    // sockjs
+    implementation 'org.webjars:sockjs-client:1.1.2'
+
+    // stomp
+    implementation 'org.webjars:stomp-websocket:2.3.3-1'
+
+    // gson
+    implementation 'com.google.code.gson:gson:2.8.0'
 
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
@@ -41,6 +66,7 @@ dependencies {
     // Swagger
     implementation("io.springfox:springfox-boot-starter:3.0.0")
     implementation("io.springfox:springfox-swagger-ui:3.0.0")
+
 
 }
 

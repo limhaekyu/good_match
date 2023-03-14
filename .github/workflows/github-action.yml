@@ -46,8 +46,8 @@ jobs:
           restore-keys: |
                 ${{ runner.os }}-gradle-
                 
-      - name: application.yml 파일 담을 폴더 만들기
-        run: mkdir ./src/main/resources
+#       - name: application.yml 파일 담을 폴더 만들기
+#         run: mkdir ./src/main/resources
       
       - name: application.yml 만들기
         run: touch ./src/main/resources/application.yml

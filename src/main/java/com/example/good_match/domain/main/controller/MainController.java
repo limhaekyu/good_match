@@ -20,8 +20,8 @@ public class MainController {
 
     @ApiOperation(value = "[메인] 메인화면 데이터 조회")
     @GetMapping("")
-    public ApiResponseDto<MainResponseDto> selectMainInfo(@RequestParam(name = "states") StatesEnum states) {
-        return mainService.selectMainInfo(states);
+    public ApiResponseDto<MainResponseDto> selectMainInfo() {
+        return mainService.selectMainInfo();
     }
 
 }

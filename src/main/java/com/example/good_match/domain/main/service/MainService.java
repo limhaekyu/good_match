@@ -6,6 +6,6 @@ import com.example.good_match.global.util.StatesEnum;
 
 public interface MainService {
 
-    ApiResponseDto<MainResponseDto> selectMainInfo(StatesEnum states);
+    ApiResponseDto<MainResponseDto> selectMainInfo();
 
 }

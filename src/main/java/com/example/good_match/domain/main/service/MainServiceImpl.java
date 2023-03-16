@@ -3,18 +3,20 @@ package com.example.good_match.domain.main.service;
 import com.example.good_match.domain.category.model.Category;
 import com.example.good_match.domain.category.model.SubCategory;
 import com.example.good_match.domain.category.repository.CategoryRepository;
-import com.example.good_match.domain.category.service.CategoryService;
 import com.example.good_match.domain.main.dto.response.CategoryResponseDto;
 import com.example.good_match.domain.main.dto.response.MainResponseDto;
 import com.example.good_match.domain.main.dto.response.MainSubCategoryDto;
 import com.example.good_match.domain.main.dto.response.PostResponseDto;
 import com.example.good_match.domain.post.domain.Post;
+import com.example.good_match.domain.post.mapper.PostMapper;
 import com.example.good_match.domain.post.repository.PostRepository;
 import com.example.good_match.global.response.ApiResponseDto;
 import com.example.good_match.global.response.ResponseStatusCode;
 import com.example.good_match.global.util.StatesEnum;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,22 +28,27 @@ public class MainServiceImpl implements MainService {
     private final CategoryRepository categoryRepository;
     private final PostRepository postRepository;
 
-    private final CategoryService categoryService;
-
     /*
         메인 데이터 반환 로직
+        카테고리, 최신 게시글 10개
     */
+    @Transactional
     @Override
-    public ApiResponseDto<MainResponseDto> selectMainInfo(StatesEnum states) {
+    public ApiResponseDto<MainResponseDto> selectMainInfo() {
         try {
             MainResponseDto mainResponse = MainResponseDto.builder()
                     .categories(selectCategoryList())
-                    .posts(selectPostsByCategory(states, categoryService.findCategoryById(0L)))
+                    .posts(selectCurrentPosts())
                     .build();
             return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), " 메인 조회 성공! " ,mainResponse);
         } catch (Exception e) {
             return ApiResponseDto.of(ResponseStatusCode.INTERNAL_SERVER_ERROR.getValue(), e.getMessage());
         }
+    }
+
+    private List<PostResponseDto> selectCurrentPosts() {
+        List<Post> posts = postRepository.findCurrentPosts(Pageable.ofSize(7));
+        return PostMapper.INSTANCE.toDtoList(posts);
     }
 
     /*
@@ -69,13 +76,13 @@ public class MainServiceImpl implements MainService {
             mainCategories.add(CategoryResponseDto.builder()
                             .id(category.getId())
                             .title(category.getTitle())
-                            .subCategories(makeDtoSubCategory(category.getSubCategories()))
+                            .subCategories(makeSubCategoryDto(category.getSubCategories()))
                     .build());
         }
         return mainCategories;
     }
 
-    private List<MainSubCategoryDto> makeDtoSubCategory(List<SubCategory> subCategories) {
+    private List<MainSubCategoryDto> makeSubCategoryDto(List<SubCategory> subCategories) {
         List<MainSubCategoryDto> mainSubCategories = new ArrayList<>();
         for (SubCategory subCategory : subCategories) {
             mainSubCategories.add(MainSubCategoryDto.builder()

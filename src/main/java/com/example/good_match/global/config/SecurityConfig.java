@@ -28,7 +28,7 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/","/swagger-resources/**","/swagger-ui/**", "/v3/api-docs").permitAll()
+                .antMatchers("/","/chat","/swagger-resources/**","/swagger-ui/**", "/v3/api-docs").permitAll()
                 .antMatchers("/api/login","/api/sign-up","/api/reissue","/api/find-id").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/anonymous*").anonymous()
@@ -40,6 +40,7 @@ public class SecurityConfig {
                 .cors().configurationSource(
                         request -> {
                             CorsConfiguration cors = new CorsConfiguration();
+
                             cors.setAllowedOrigins(List.of("*", "http://localhost:3000"));
                             cors.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
                             cors.setAllowedHeaders(List.of("*"));

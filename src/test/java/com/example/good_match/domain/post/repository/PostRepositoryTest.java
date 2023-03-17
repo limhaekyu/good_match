@@ -46,33 +46,42 @@ class PostRepositoryTest {
     @Test
     @DisplayName("최근 게시글 7개 조회 테스트")
     void findCurrentPosts() {
-        Category category = categoryRepository.getById(1L);
         // given
-        Post post1 = Post.builder()
-                .title("용병구해요")
-                .contents("풋살용병!")
-                .member(memberRepository.findById(1L).orElseThrow())
+        Member member = Member.builder()
+                .name("member1")
+                .email("member1@gmail.com")
                 .states(StatesEnum.SEOUL)
-                .category(category)
-                .subCategory(category.getSubCategories().get(0))
+                .phoneNumber("010-1010-1010")
                 .build();
-        Post post2 = Post.builder()
-                .title("러닝메이트 구합니다.")
-                .contents("부산러닝!")
-                .member(memberRepository.findById(1L).orElseThrow())
-                .states(StatesEnum.SEOUL)
-                .category(category)
-                .subCategory(category.getSubCategories().get(0))
+
+        Category category = Category.builder()
+                .title("cate1")
                 .build();
-        for (int i=-0; i < 7; i++) {
-            postRepository.save(post1);
-            postRepository.save(post2);
+        SubCategory subCategory = SubCategory.builder()
+                .subCategoryTitle("sub1")
+                .category(category)
+                .build();
+
+        memberRepository.save(member);
+        categoryRepository.save(category);
+        subCategoryRepository.save(subCategory);
+
+        for (int i=0; i < 40; i++) {
+            postRepository.save(Post.builder()
+                    .title("post"+i)
+                    .contents("contents"+i)
+                    .member(member)
+                    .category(category)
+                    .subCategory(subCategory)
+                    .build());
         }
         // when
-
         List<Post> posts = postRepository.findRecentPosts(Pageable.ofSize(7));
+
         // then
         assertThat(posts.size()).isEqualTo(7);
+//        assertThat(posts.get(0).getTitle()).isEqualTo("post39");
+//        assertThat(posts.get(6).getTitle()).isEqualTo("post33");
     }
 
     @Test
@@ -108,6 +117,7 @@ class PostRepositoryTest {
 
         // when
         Page<Post> postsPage = postRepository.findAllBySubCategory(subCategory, PageRequest.of(0, 10, Sort.by("id").descending()));
+
         // then
         assertThat(postsPage.getSize()).isEqualTo(10);
         assertThat(postsPage.getContent().get(0).getTitle()).isEqualTo("post19");

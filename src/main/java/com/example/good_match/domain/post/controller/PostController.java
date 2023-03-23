@@ -8,8 +8,7 @@ import com.example.good_match.global.annotation.LoginRequired;
 import com.example.good_match.global.response.ApiResponseDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,6 +20,7 @@ public class PostController {
 
     @ApiOperation(value = "[게시글] 게시글 등록")
     @LoginRequired
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
     public ApiResponseDto insertPost(@CurrentMemberId Long memberId, @RequestBody AddPostRequestDto addPostRequestDto) {
         return postService.insertPost(addPostRequestDto, memberId);

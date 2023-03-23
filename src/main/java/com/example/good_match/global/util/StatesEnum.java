@@ -1,6 +1,7 @@
 package com.example.good_match.global.util;
 
 public enum StatesEnum {
+    NATIONWIDE,
     SEOUL,
     INCHEON,
     BUSAN,

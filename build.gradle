@@ -71,6 +71,9 @@ dependencies {
     implementation("io.springfox:springfox-boot-starter:3.0.0")
     implementation("io.springfox:springfox-swagger-ui:3.0.0")
 
+    // test -> assertThat 사용
+    testImplementation 'org.assertj:assertj-core:3.24.2'
+
 
 }
 

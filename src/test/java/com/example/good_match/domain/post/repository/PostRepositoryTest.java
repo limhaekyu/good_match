@@ -2,10 +2,7 @@ package com.example.good_match.domain.post.repository;
 
 import com.example.good_match.domain.category.model.Category;
 import com.example.good_match.domain.category.model.SubCategory;
-import com.example.good_match.domain.category.repository.CategoryRepository;
-import com.example.good_match.domain.category.repository.SubCategoryRepository;
 import com.example.good_match.domain.member.model.Member;
-import com.example.good_match.domain.member.repository.MemberRepository;
 import com.example.good_match.domain.post.domain.Post;
 import com.example.good_match.global.util.StatesEnum;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,40 +29,22 @@ class PostRepositoryTest {
     @Autowired
     private PostRepository postRepository;
 
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private SubCategoryRepository subCategoryRepository;
-
 
     @Test
     @DisplayName("최근 게시글 7개 조회 테스트")
     void findCurrentPosts() {
         // given
         Member member = Member.builder()
-                .name("member1")
-                .email("member1@gmail.com")
-                .states(StatesEnum.SEOUL)
-                .phoneNumber("010-1010-1010")
+                .id(1L)
                 .build();
-
         Category category = Category.builder()
-                .title("cate1")
+                .id(1L)
                 .build();
         SubCategory subCategory = SubCategory.builder()
-                .subCategoryTitle("sub1")
-                .category(category)
+                .id(1L)
                 .build();
 
-        memberRepository.save(member);
-        categoryRepository.save(category);
-        subCategoryRepository.save(subCategory);
-
-        for (int i=0; i < 40; i++) {
+        for (int i=0; i < 20; i++) {
             postRepository.save(Post.builder()
                     .title("post"+i)
                     .contents("contents"+i)
@@ -80,8 +58,6 @@ class PostRepositoryTest {
 
         // then
         assertThat(posts.size()).isEqualTo(7);
-//        assertThat(posts.get(0).getTitle()).isEqualTo("post39");
-//        assertThat(posts.get(6).getTitle()).isEqualTo("post33");
     }
 
     @Test
@@ -89,21 +65,14 @@ class PostRepositoryTest {
     void findAllBySubCategory() {
         // given
         Member member = Member.builder()
-                .name("member1")
-                .email("member1@gmail.com")
-                .states(StatesEnum.SEOUL)
-                .phoneNumber("010-1010-1010")
+                .id(1L)
                 .build();
         Category category = Category.builder()
-                .title("cate1")
+                .id(1L)
                 .build();
         SubCategory subCategory = SubCategory.builder()
-                .subCategoryTitle("sub1")
-                .category(category)
+                .id(1L)
                 .build();
-        memberRepository.save(member);
-        categoryRepository.save(category);
-        subCategoryRepository.save(subCategory);
 
         for(int i=0; i<20; i++) {
             postRepository.save(Post.builder()
@@ -144,7 +113,7 @@ class PostRepositoryTest {
                 .category(Category.builder().id(1L).build())
                 .subCategory(SubCategory.builder().id(1L).build())
                 .build());
-        List<Post> postsByKeyword = new ArrayList<>();
+        List<Post> postsByKeyword;
         // when
         postsByKeyword = postRepository.findByTitleContaining("구해요");
         // then
@@ -172,7 +141,7 @@ class PostRepositoryTest {
                 .category(Category.builder().id(2L).build())
                 .subCategory(SubCategory.builder().id(3L).build())
                 .build());
-        List<Post> postsByKeyword = new ArrayList<>();
+        List<Post> postsByKeyword;
         // when
         postsByKeyword = postRepository.findByCategoryAndTitleContaining(Category.builder().id(1L).build(), "서울");
         // then
@@ -200,7 +169,7 @@ class PostRepositoryTest {
                 .category(Category.builder().id(2L).build())
                 .subCategory(SubCategory.builder().id(3L).build())
                 .build());
-        List<Post> postsByKeyword = new ArrayList<>();
+        List<Post> postsByKeyword;
         // when
         postsByKeyword = postRepository.findByStatesAndTitleContaining(StatesEnum.BUSAN, "크루");
         // then
@@ -244,7 +213,7 @@ class PostRepositoryTest {
                 .category(Category.builder().id(2L).build())
                 .subCategory(SubCategory.builder().id(3L).build())
                 .build());
-        List<Post> postsByKeyword = new ArrayList<>();
+        List<Post> postsByKeyword;
         // when
         postsByKeyword = postRepository.findByStatesAndCategoryAndTitleContaining(StatesEnum.BUSAN, Category.builder().id(1L).build(), "크루" );
         // then

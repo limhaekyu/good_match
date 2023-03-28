@@ -4,7 +4,6 @@ import com.example.good_match.domain.category.model.Category;
 import com.example.good_match.domain.category.model.SubCategory;
 import com.example.good_match.domain.category.repository.CategoryRepository;
 import com.example.good_match.domain.category.repository.SubCategoryRepository;
-import com.example.good_match.domain.main.dto.response.PostResponseDto;
 import com.example.good_match.domain.member.model.Member;
 import com.example.good_match.domain.member.repository.MemberRepository;
 import com.example.good_match.domain.post.domain.Post;

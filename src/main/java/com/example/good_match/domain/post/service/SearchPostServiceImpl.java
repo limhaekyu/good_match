@@ -31,16 +31,16 @@ public class SearchPostServiceImpl implements SearchPostService {
         }
 
         if (isNationWide(city) && isEveryCategory(categoryId)) {
-                // 전체
+            // 전체
             posts = postRepository.findByTitleContaining(keyword);
         } else if (isNationWide(city) && !isEveryCategory(categoryId)) {
             // 카테고리별
             posts = postRepository.findByCategoryAndTitleContaining(categoryService.findCategoryById(categoryId), keyword);
         } else if (!isNationWide(city) && isEveryCategory(categoryId)) {
-            // 특정 지역 전체
+            // 특정지역
             posts = postRepository.findByStatesAndTitleContaining(city, keyword);
         } else if (!isNationWide(city) && !isEveryCategory(categoryId)) {
-            // 카테고리별
+            // 카테고리,지역
             posts = postRepository.findByStatesAndCategoryAndTitleContaining(city, categoryService.findCategoryById(categoryId), keyword);
         }
         return posts.stream().map(SearchPostResponseDto::new).collect(Collectors.toList());

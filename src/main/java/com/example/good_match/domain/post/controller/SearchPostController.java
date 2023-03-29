@@ -17,13 +17,6 @@ public class SearchPostController {
 
     private final SearchPostService searchPostService;
 
-    /*
-        검색 조건
-        1. 지역 <전국 or 최대 3개 선택>
-        2. 카테고리, 서브카테고리 선택
-        3. 제목별 ( 정규식 )
-        4. 작성자 별 (정규식, 사용자 이름)
-    */
     @ApiOperation(value = "[게시글] 게시글 검색")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("")

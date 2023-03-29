@@ -8,6 +8,7 @@ import com.example.good_match.domain.member.model.Member;
 import com.example.good_match.domain.post.domain.Post;
 import com.example.good_match.domain.post.dto.response.SearchPostResponseDto;
 import com.example.good_match.domain.post.repository.PostRepository;
+import com.example.good_match.domain.post.repository.PostRepositorySupport;
 import com.example.good_match.global.exception.NullSearchKeywordException;
 import com.example.good_match.global.util.StatesEnum;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,17 +33,14 @@ import static org.mockito.Mockito.when;
 class SearchPostServiceTest {
 
     @Mock
-    private PostRepository postRepository;
-
-    @Mock
-    private CategoryService categoryService;
+    private PostRepositorySupport postRepositorySupport;
 
     @InjectMocks
     private SearchPostServiceImpl searchPostService;
 
     @Test
-    @DisplayName(" [검색 기능 테스트] 키워드 검색 ")
-    void searchPosts() throws NullSearchKeywordException {
+    @DisplayName(" [검색 기능 테스트] 키워드 검색 Querydsl 사용 ")
+    void searchPostsDsl() throws NullSearchKeywordException {
 
         // Set up data
         StatesEnum city = StatesEnum.NATIONWIDE;
@@ -60,24 +58,22 @@ class SearchPostServiceTest {
                 .build();
         List<Post> posts = Arrays.asList(
                 Post.builder()
-                    .id(1L).title("Test post 1").category(category).states(StatesEnum.SEJONG).contents("Test content1").member(member)
-                    .build(),
+                        .id(1L).title("Test post 1").category(category).states(StatesEnum.SEJONG).contents("Test content1").member(member)
+                        .build(),
                 Post.builder()
-                    .id(2L).title("Test post 2").category(category2).states(StatesEnum.BUSAN).contents("Test content2").member(member)
-                    .build(),
+                        .id(2L).title("Test post 2").category(category).states(StatesEnum.BUSAN).contents("Test content2").member(member)
+                        .build(),
                 Post.builder()
-                        .id(3L).title("Test post 3").category(category).states(StatesEnum.SEJONG).contents("Test content3").member(member)
+                        .id(3L).title("Test post 3").category(category2).states(StatesEnum.SEJONG).contents("Test content3").member(member)
                         .build()
         );
 
         // Repository return
-        when(postRepository.findByTitleContaining(keyword)).thenReturn(posts);
-        when(postRepository.findByCategoryAndTitleContaining(category, keyword)).thenReturn(Arrays.asList(posts.get(0),posts.get(2)));
-        when(postRepository.findByStatesAndTitleContaining(StatesEnum.BUSAN, keyword)).thenReturn(Collections.singletonList(posts.get(1)));
-        when(postRepository.findByStatesAndCategoryAndTitleContaining(StatesEnum.SEJONG, category, keyword)).thenReturn(Collections.singletonList(posts.get(0)));
-
-        // CategoryService return
-        when(categoryService.findCategoryById(categoryId)).thenReturn(category);
+        when(postRepositorySupport.searchByKeyword(city, null, keyword)).thenReturn(posts);
+        when(postRepositorySupport.searchByKeyword(city,null, "2")).thenReturn(Collections.singletonList(posts.get(1)));
+        when(postRepositorySupport.searchByKeyword(StatesEnum.SEJONG, null, keyword)).thenReturn(Arrays.asList(posts.get(0), posts.get(2)));
+        when(postRepositorySupport.searchByKeyword(city, categoryId, keyword)).thenReturn(Arrays.asList(posts.get(0), posts.get(1)));
+        when(postRepositorySupport.searchByKeyword(StatesEnum.SEJONG, categoryId, keyword)).thenReturn(Collections.singletonList(posts.get(0)));
 
         // Case 1: 전국, 전체 카테고리
         List<SearchPostResponseDto> result1 = searchPostService.searchPosts(city, null, keyword);
@@ -86,16 +82,21 @@ class SearchPostServiceTest {
         assertEquals("Test post 2", result1.get(1).getTitle());
         assertEquals("Test post 3", result1.get(2).getTitle());
 
+        List<SearchPostResponseDto> result11 = searchPostService.searchPosts(city, null, "2");
+        assertEquals(3, result1.size());
+        assertEquals("Test post 2", result11.get(0).getTitle());
+
         // Case 2: 전국, 특정 카테고리 검색
         List<SearchPostResponseDto> result2 = searchPostService.searchPosts(city, categoryId, keyword);
         assertEquals(2, result2.size());
         assertEquals("Test post 1", result2.get(0).getTitle());
-        assertEquals("Test post 3", result2.get(1).getTitle());
+        assertEquals("Test post 2", result2.get(1).getTitle());
 
         // Case 3 : 특정 지역, 전체 카테고리 검색
-        List<SearchPostResponseDto> result3 = searchPostService.searchPosts(StatesEnum.BUSAN, null, keyword);
-        assertEquals(1, result3.size());
-        assertEquals("Test post 2", result3.get(0).getTitle());
+        List<SearchPostResponseDto> result3 = searchPostService.searchPosts(StatesEnum.SEJONG, null, keyword);
+        assertEquals(2, result3.size());
+        assertEquals("Test post 1", result3.get(0).getTitle());
+        assertEquals("Test post 3", result3.get(1).getTitle());
 
         // Case 4 : 특정 지역, 특정 카테고리 검색
         List<SearchPostResponseDto> result4 = searchPostService.searchPosts(StatesEnum.SEJONG, categoryId, keyword);

@@ -4,7 +4,6 @@ import com.example.good_match.domain.category.model.Category;
 import com.example.good_match.domain.category.model.SubCategory;
 import com.example.good_match.domain.member.model.Member;
 import com.example.good_match.domain.post.domain.Post;
-import com.example.good_match.global.util.StatesEnum;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +28,6 @@ class PostRepositoryTest {
     @Autowired
     private PostRepository postRepository;
 
-
     @Test
     @DisplayName("최근 게시글 7개 조회 테스트")
     void findCurrentPosts() {
@@ -44,7 +42,7 @@ class PostRepositoryTest {
                 .id(1L)
                 .build();
 
-        for (int i=0; i < 20; i++) {
+        for (int i=0; i < 11; i++) {
             postRepository.save(Post.builder()
                     .title("post"+i)
                     .contents("contents"+i)
@@ -74,7 +72,7 @@ class PostRepositoryTest {
                 .id(1L)
                 .build();
 
-        for(int i=0; i<20; i++) {
+        for(int i=0; i<11; i++) {
             postRepository.save(Post.builder()
                             .title("post"+i)
                             .contents("contents"+i)
@@ -91,133 +89,5 @@ class PostRepositoryTest {
         assertThat(postsPage.getSize()).isEqualTo(10);
         assertThat(postsPage.getContent().get(0).getTitle()).isEqualTo("post19");
         assertThat(postsPage.getContent().get(9).getTitle()).isEqualTo("post10");
-    }
-
-    @Test
-    @DisplayName("[검색쿼리 테스트] 키워드 검색")
-    void findByTitleContaining() {
-        // given
-        postRepository.save(Post.builder()
-                        .title("멤버 구해요.")
-                        .contents("풋살")
-                        .states(StatesEnum.SEOUL)
-                        .member(Member.builder().id(1L).build())
-                        .category(Category.builder().id(1L).build())
-                        .subCategory(SubCategory.builder().id(1L).build())
-                .build());
-        postRepository.save(Post.builder()
-                .title("멤버 구합니다.")
-                .contents("풋살")
-                .states(StatesEnum.SEOUL)
-                .member(Member.builder().id(1L).build())
-                .category(Category.builder().id(1L).build())
-                .subCategory(SubCategory.builder().id(1L).build())
-                .build());
-        List<Post> postsByKeyword;
-        // when
-        postsByKeyword = postRepository.findByTitleContaining("구해요");
-        // then
-        assertThat(postsByKeyword.size()).isNotEqualTo(0);
-        assertThat(postsByKeyword.get(postsByKeyword.size()-1).getTitle()).isEqualTo("멤버 구해요.");
-    }
-
-    @Test
-    @DisplayName("[검색쿼리 테스트] 카테고리별 키워드")
-    void findByCategoryAndTitleContaining() {
-        // given
-        postRepository.save(Post.builder()
-                .title("서울 풋살!")
-                .contents("풋살")
-                .states(StatesEnum.SEOUL)
-                .member(Member.builder().id(1L).build())
-                .category(Category.builder().id(1L).build())
-                .subCategory(SubCategory.builder().id(1L).build())
-                .build());
-        postRepository.save(Post.builder()
-                .title("서울 러닝.")
-                .contents("러닝")
-                .states(StatesEnum.SEOUL)
-                .member(Member.builder().id(1L).build())
-                .category(Category.builder().id(2L).build())
-                .subCategory(SubCategory.builder().id(3L).build())
-                .build());
-        List<Post> postsByKeyword;
-        // when
-        postsByKeyword = postRepository.findByCategoryAndTitleContaining(Category.builder().id(1L).build(), "서울");
-        // then
-        assertThat(postsByKeyword.size()).isEqualTo(1);
-        assertThat(postsByKeyword.get(postsByKeyword.size()-1).getTitle()).isEqualTo("서울 풋살!");
-    }
-
-    @Test
-    @DisplayName("[검색쿼리 테스트] 지역별 키워드")
-    void findByStatesAndTitleContaining() {
-        // given
-        postRepository.save(Post.builder()
-                .title("서울 크루!")
-                .contents("러닝")
-                .states(StatesEnum.SEOUL)
-                .member(Member.builder().id(1L).build())
-                .category(Category.builder().id(1L).build())
-                .subCategory(SubCategory.builder().id(1L).build())
-                .build());
-        postRepository.save(Post.builder()
-                .title("부산 크루.")
-                .contents("러닝")
-                .states(StatesEnum.BUSAN)
-                .member(Member.builder().id(1L).build())
-                .category(Category.builder().id(2L).build())
-                .subCategory(SubCategory.builder().id(3L).build())
-                .build());
-        List<Post> postsByKeyword;
-        // when
-        postsByKeyword = postRepository.findByStatesAndTitleContaining(StatesEnum.BUSAN, "크루");
-        // then
-        assertThat(postsByKeyword.size()).isEqualTo(1);
-        assertThat(postsByKeyword.get(postsByKeyword.size()-1).getTitle()).isEqualTo("부산 크루.");
-    }
-
-    @Test
-    @DisplayName("[검색쿼리 테스트] 지역별,카테고리별 키워드")
-    void findByStatesAndCategoryAndTitleContaining() {
-        // given
-        postRepository.save(Post.builder()
-                .title("서울 크루!")
-                .contents("풋살")
-                .states(StatesEnum.SEOUL)
-                .member(Member.builder().id(1L).build())
-                .category(Category.builder().id(1L).build())
-                .subCategory(SubCategory.builder().id(1L).build())
-                .build());
-        postRepository.save(Post.builder()
-                .title("서울 크루.")
-                .contents("러닝")
-                .states(StatesEnum.BUSAN)
-                .member(Member.builder().id(1L).build())
-                .category(Category.builder().id(2L).build())
-                .subCategory(SubCategory.builder().id(3L).build())
-                .build());
-        postRepository.save(Post.builder()
-                .title("부산 크루!")
-                .contents("풋살")
-                .states(StatesEnum.BUSAN)
-                .member(Member.builder().id(1L).build())
-                .category(Category.builder().id(1L).build())
-                .subCategory(SubCategory.builder().id(1L).build())
-                .build());
-        postRepository.save(Post.builder()
-                .title("부산 크루.")
-                .contents("러닝")
-                .states(StatesEnum.BUSAN)
-                .member(Member.builder().id(1L).build())
-                .category(Category.builder().id(2L).build())
-                .subCategory(SubCategory.builder().id(3L).build())
-                .build());
-        List<Post> postsByKeyword;
-        // when
-        postsByKeyword = postRepository.findByStatesAndCategoryAndTitleContaining(StatesEnum.BUSAN, Category.builder().id(1L).build(), "크루" );
-        // then
-        assertThat(postsByKeyword.size()).isEqualTo(1);
-        assertThat(postsByKeyword.get(postsByKeyword.size()-1).getTitle()).isEqualTo("부산 크루!");
     }
 }

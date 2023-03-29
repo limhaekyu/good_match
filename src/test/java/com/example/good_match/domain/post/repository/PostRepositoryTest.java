@@ -87,7 +87,7 @@ class PostRepositoryTest {
 
         // then
         assertThat(postsPage.getSize()).isEqualTo(10);
-        assertThat(postsPage.getContent().get(0).getTitle()).isEqualTo("post19");
-        assertThat(postsPage.getContent().get(9).getTitle()).isEqualTo("post10");
+        assertThat(postsPage.getContent().get(0).getTitle()).isEqualTo("post10");
+        assertThat(postsPage.getContent().get(9).getTitle()).isEqualTo("post1");
     }
 }

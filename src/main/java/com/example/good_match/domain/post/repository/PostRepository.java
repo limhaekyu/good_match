@@ -22,12 +22,4 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findRecentPosts(Pageable pageable);
 
     Page<Post> findAllBySubCategory(SubCategory subCategory, Pageable pageable);
-
-    List<Post> findByTitleContaining(String keyword);
-
-    List<Post> findByCategoryAndTitleContaining(Category category, String keyword);
-
-    List<Post> findByStatesAndTitleContaining(StatesEnum city, String keyword);
-
-    List<Post> findByStatesAndCategoryAndTitleContaining(StatesEnum city, Category category, String keyword);
 }

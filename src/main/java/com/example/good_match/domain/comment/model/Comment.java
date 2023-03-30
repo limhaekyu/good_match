@@ -36,4 +36,8 @@ public class Comment extends BaseTimeEntity {
     public void update(String contents) {
         this.contents = contents;
     }
+
+    public boolean eqMember(Member member) {
+        return this.member.equals(member);
+    }
 }

@@ -70,4 +70,8 @@ public class Member extends BaseTimeEntity {
         this.deletedAt = LocalDateTime.now();
         this.isDeleted = true;
     }
+
+    public boolean isAdmin() {
+        return this.authority.equals(Authority.ROLE_ADMIN);
+    }
 }

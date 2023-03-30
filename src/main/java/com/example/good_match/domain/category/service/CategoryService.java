@@ -5,6 +5,7 @@ import com.example.good_match.domain.category.dto.response.PostListByCategoryRes
 import com.example.good_match.domain.category.dto.response.CategoryResponseDto;
 import com.example.good_match.domain.category.dto.response.SubCategoryResponseDto;
 import com.example.good_match.domain.category.model.Category;
+import com.example.good_match.domain.category.model.SubCategory;
 import com.example.good_match.global.response.ApiResponseDto;
 import com.example.good_match.global.util.StatesEnum;
 import org.springframework.security.core.userdetails.User;
@@ -20,6 +21,8 @@ public interface CategoryService {
     ApiResponseDto<List<SubCategoryResponseDto>> selectSubCategoryList(Long categoryId);
 
     Category findCategoryById(Long categoryId);
+
+    SubCategory findSubCategoryById(Long subCategoryId);
 
     ApiResponseDto<PostListByCategoryResponseDto> selectPostByCategory(Long categoryId, StatesEnum states);
 

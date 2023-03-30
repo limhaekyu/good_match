@@ -32,6 +32,7 @@ public class CategoryServiceImpl implements CategoryService{
 
     private final MemberService memberService;
 
+
     /*
         카테고리 등록
     */
@@ -97,6 +98,10 @@ public class CategoryServiceImpl implements CategoryService{
         return categoryRepository.findById(categoryId).orElseThrow(()-> new IllegalArgumentException("카테고리를 찾을 수 없습니다."));
     }
 
+    @Override
+    public SubCategory findSubCategoryById(Long subCategoryId) {
+        return subCategoryRepository.findById(subCategoryId).orElseThrow(() -> new IllegalArgumentException("해당 서브카테고리를 찾을 수 없습니다."));
+    }
 
     /*
         카테고리별 게시글 호출

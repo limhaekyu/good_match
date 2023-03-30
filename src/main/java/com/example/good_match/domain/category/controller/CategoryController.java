@@ -12,6 +12,8 @@ import com.example.good_match.global.response.ApiResponseDto;
 import com.example.good_match.global.util.StatesEnum;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
@@ -28,26 +30,27 @@ public class CategoryController {
     @Auth
     @LoginRequired
     @PostMapping("")
-    public ApiResponseDto insertCategory(@CurrentMemberId Long memberId, @RequestBody InsertCategoryRequestDto insertCategoryRequest) {
-        return categoryService.insertCategory(memberId, insertCategoryRequest);
+    public ResponseEntity<Void> insertCategory(@RequestBody InsertCategoryRequestDto insertCategoryRequest) {
+        categoryService.insertCategory(insertCategoryRequest);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "[카테고리] 전체 카테고리 리스트")
     @GetMapping("")
-    public ApiResponseDto<List<CategoryResponseDto>> selectCategoryList(){
-        return categoryService.selectCategoryList();
+    public ResponseEntity<List<CategoryResponseDto>> selectCategoryList(){
+        return ResponseEntity.ok(categoryService.selectCategoryList());
     }
 
     @ApiOperation(value = "[카테고리] 서브카테고리 조회")
     @GetMapping("/{category-id}/subs")
-    public ApiResponseDto<List<SubCategoryResponseDto>> selectCategory(@PathVariable("category-id") Long categoryId){
-        return categoryService.selectSubCategoryList(categoryId);
+    public ResponseEntity<List<SubCategoryResponseDto>> selectCategory(@PathVariable("category-id") Long categoryId){
+        return ResponseEntity.ok(categoryService.selectSubCategoryList(categoryId));
     }
 
     @ApiOperation(value = "[카테고리] 카테고리별 게시글 조회")
     @GetMapping("/{category-id}/posts")
-    public ApiResponseDto<PostListByCategoryResponseDto> selectPostByCategory(@PathVariable("category-id") Long categoryId, StatesEnum states) {
-        return categoryService.selectPostByCategory(categoryId, states);
+    public ResponseEntity<PostListByCategoryResponseDto> selectPostByCategory(@PathVariable("category-id") Long categoryId, StatesEnum states) {
+        return ResponseEntity.ok(categoryService.selectPostByCategory(categoryId, states));
     }
 
 }

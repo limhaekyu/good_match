@@ -16,6 +16,7 @@ import com.example.good_match.global.response.ApiResponseDto;
 import com.example.good_match.global.response.ResponseStatusCode;
 import com.example.good_match.global.util.StatesEnum;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,16 +31,13 @@ public class CategoryServiceImpl implements CategoryService{
     private final SubCategoryRepository subCategoryRepository;
     private final PostRepository postRepository;
 
-    private final MemberService memberService;
-
-
     /*
         카테고리 등록
     */
 
     @Transactional
     @Override
-    public ApiResponseDto insertCategory(Long memberId, InsertCategoryRequestDto insertCategoryRequest) {
+    public void insertCategory(InsertCategoryRequestDto insertCategoryRequest) {
         try {
 
             if (!categoryRepository.existsByTitle(insertCategoryRequest.getTitle())) {
@@ -54,25 +52,23 @@ public class CategoryServiceImpl implements CategoryService{
                             .category(category)
                             .build());
                 }
-                return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "카테고리 등록에 성공했습니다.");
             } else {
-                return ApiResponseDto.of(ResponseStatusCode.REGISTERED.getValue(), "이미 등록된 카테고리입니다.");
+                throw new DuplicateKeyException("이미 등록된 카테고리입니다.");
             }
         } catch (Exception e) {
-            return ApiResponseDto.of(ResponseStatusCode.INTERNAL_SERVER_ERROR.getValue(), "카테고리 등록에 실패했습니다. " + e.getMessage());
+            throw new IllegalArgumentException("카테고리 등록에 실패했습니다. " + e.getMessage());
         }
     }
 
     /*
         전체 카테고리 리스트 호출
     */
-    public ApiResponseDto<List<CategoryResponseDto>> selectCategoryList() {
+    public List<CategoryResponseDto> selectCategoryList() {
         try {
-            List<CategoryResponseDto> categoryResponseList = categoryRepository.findAll().stream().map(this::response).toList();
+            return categoryRepository.findAll().stream().map(this::response).toList();
 
-            return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "카테고리 조회 성공", categoryResponseList);
         } catch (Exception e) {
-            return ApiResponseDto.of(ResponseStatusCode.FAIL.getValue(), "카테고리 조회를 실패했습니다 " + e.getMessage());
+            throw new IllegalArgumentException("카테고리 조회 실패! " + e.getMessage());
         }
     }
 
@@ -80,13 +76,11 @@ public class CategoryServiceImpl implements CategoryService{
         카테고리별 서브 카테고리 호출
     */
 
-    public ApiResponseDto<List<SubCategoryResponseDto>> selectSubCategoryList(Long categoryId) {
+    public List<SubCategoryResponseDto> selectSubCategoryList(Long categoryId) {
         try {
-
-            List<SubCategoryResponseDto> subCategoryResponselist = subCategoryRepository.findAllByCategoryId(categoryId).stream().map(this::subResponse).toList();
-            return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "서브 카테고리 조회 성공", subCategoryResponselist);
+            return subCategoryRepository.findAllByCategoryId(categoryId).stream().map(this::subResponse).toList();
         } catch (Exception e) {
-            return ApiResponseDto.of(ResponseStatusCode.FAIL.getValue(), "서브 카테고리 조회 실패 "+e.getMessage());
+            throw new IllegalArgumentException("서브 카테고리 조회 실패! " + e.getMessage());
         }
     }
 
@@ -107,17 +101,16 @@ public class CategoryServiceImpl implements CategoryService{
         카테고리별 게시글 호출
     */
     @Override
-    public ApiResponseDto<PostListByCategoryResponseDto> selectPostByCategory(Long categoryId, StatesEnum states) {
+    public PostListByCategoryResponseDto selectPostByCategory(Long categoryId, StatesEnum states) {
         try {
             Category category = findCategoryById(categoryId);
-            PostListByCategoryResponseDto boardsByCategory = PostListByCategoryResponseDto.builder()
+            return PostListByCategoryResponseDto.builder()
                     .categoryId(categoryId)
                     .categoryTitle(category.getTitle())
                     .posts(selectPosts(states, category))
                     .build();
-            return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "해당 카테고리 게시글 조회 성공! ", boardsByCategory);
         } catch (Exception e) {
-            return ApiResponseDto.of(ResponseStatusCode.INTERNAL_SERVER_ERROR.getValue(), e.getMessage());
+            throw new IllegalArgumentException("게시글 조회 실패! " + e.getMessage());
         }
     }
 

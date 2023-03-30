@@ -37,4 +37,7 @@ public class Category extends BaseTimeEntity {
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();
 
+    public boolean isNullSubCategory() {
+        return this.subCategories == null;
+    }
 }

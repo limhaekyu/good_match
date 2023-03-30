@@ -7,12 +7,10 @@ import com.example.good_match.global.response.ApiResponseDto;
 import org.springframework.security.core.userdetails.User;
 
 public interface CommentService {
-    public ApiResponseDto insertComment(InsertCommentRequestDto insertCommentRequestDto, Long memberId);
+    public void insertComment(InsertCommentRequestDto insertCommentRequestDto, Long memberId);
 
-    public ApiResponseDto updateComment(Long memberId, Long commentId, UpdateCommentRequestDto updateCommentRequestDto);
+    public void updateComment(Long memberId, Long commentId, UpdateCommentRequestDto updateCommentRequestDto);
 
-    public ApiResponseDto cancelComment(Long memberId, Long commentId);
-
-    public Comment findCommentById(Long commentId);
+    public void cancelComment(Long memberId, Long commentId);
 
 }

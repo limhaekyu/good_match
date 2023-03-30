@@ -67,4 +67,8 @@ public class Post extends BaseTimeEntity {
         this.contents = contents;
         this.states = states;
     }
+
+    public boolean eqMember(Member member) {
+        return this.member.equals(member);
+    }
 }

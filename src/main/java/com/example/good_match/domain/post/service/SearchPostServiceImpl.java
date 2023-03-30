@@ -18,8 +18,6 @@ public class SearchPostServiceImpl implements SearchPostService {
 
     private final PostRepositorySupport postRepositorySupport;
 
-
-    @Override
     @Transactional(readOnly = true)
     public List<SearchPostResponseDto> searchPosts(StatesEnum city, Long categoryId, String keyword) throws NullSearchKeywordException {
 

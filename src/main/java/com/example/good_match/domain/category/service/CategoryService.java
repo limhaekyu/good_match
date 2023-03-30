@@ -14,17 +14,17 @@ import java.util.List;
 
 public interface CategoryService {
 
-    ApiResponseDto insertCategory(Long memberId, InsertCategoryRequestDto insertCategoryRequest);
+    void insertCategory(InsertCategoryRequestDto insertCategoryRequest);
 
-    ApiResponseDto<List<CategoryResponseDto>> selectCategoryList();
+    List<CategoryResponseDto> selectCategoryList();
 
-    ApiResponseDto<List<SubCategoryResponseDto>> selectSubCategoryList(Long categoryId);
+    List<SubCategoryResponseDto> selectSubCategoryList(Long categoryId);
 
     Category findCategoryById(Long categoryId);
 
     SubCategory findSubCategoryById(Long subCategoryId);
 
-    ApiResponseDto<PostListByCategoryResponseDto> selectPostByCategory(Long categoryId, StatesEnum states);
+    PostListByCategoryResponseDto selectPostByCategory(Long categoryId, StatesEnum states);
 
 
 }

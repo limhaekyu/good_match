@@ -133,7 +133,7 @@ public class CategoryServiceImpl implements CategoryService{
     private CategoryResponseDto response(Category category) {
         List<SubCategoryResponseDto> subCategoryResponseList = new ArrayList<>();
 
-        if(category.getSubCategories() != null) {
+        if(!category.isNullSubCategory()) {
             for(SubCategory subCategory : category.getSubCategories()){
                 subCategoryResponseList.add(
                         SubCategoryResponseDto.builder()
@@ -142,7 +142,6 @@ public class CategoryServiceImpl implements CategoryService{
                             .build());
             }
         }
-
         return CategoryResponseDto.builder()
                 .categoryId(category.getId())
                 .title(category.getTitle())

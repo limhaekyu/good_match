@@ -15,7 +15,5 @@ public interface MemberService {
 
     void deleteMember(Long memberId);
 
-    Long isValidMember(LoginRequestDto loginRequestDto);
-
     Member findMemberById(Long memberId);
 }

@@ -74,30 +74,4 @@ class MemberServiceImplTest {
 
         assertEquals(result.getEmail(), findIdResponse.getEmail());
     }
-
-
-    @Test
-    @DisplayName("[회원] 회원 검증 테스트")
-    void isValidMember() {
-        String email = "lim@gmail.com";
-        String password = "123123";
-        String encodedPassword = passwordEncoder.encode(password);
-        Member member = Member.builder()
-                .id(1L)
-                .email(email)
-                .password(encodedPassword)
-                .build();
-
-        LoginRequestDto loginRequest = new LoginRequestDto(email, password);
-
-        when(memberRepository.findByEmail(loginRequest.getEmail())).thenReturn(Optional.of(member));
-        when(passwordEncoder.matches(loginRequest.getPassword(), member.getPassword())).thenReturn(true);
-
-        Long result = memberService.isValidMember(loginRequest);
-
-        assertEquals(result, 1L);
-
-
-    }
-
 }

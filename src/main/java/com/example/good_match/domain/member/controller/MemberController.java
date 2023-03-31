@@ -37,9 +37,8 @@ public class MemberController {
 
     @ApiOperation(value = "[회원] 로그인")
     @PostMapping("/login")
-    public ApiResponseDto login(@RequestBody LoginRequestDto loginRequestDto) {
-        Long memberId = memberService.isValidMember(loginRequestDto);
-        return loginService.login(memberId);
+    public void login(@RequestBody LoginRequestDto loginRequestDto) {
+        loginService.login(loginRequestDto);
     }
 
     @ApiOperation(value = "[회원] 로그아웃")
@@ -56,7 +55,6 @@ public class MemberController {
 
     @ApiOperation(value = "[회원] 회원 탈퇴")
     @LoginRequired
-    @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/member")
     public void deleteMember(@CurrentMemberId Long memberId) {
         memberService.deleteMember(memberId);

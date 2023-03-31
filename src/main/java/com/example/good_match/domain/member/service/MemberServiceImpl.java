@@ -85,24 +85,9 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
-    /*
-        로그인 회원 검증
-    */
-    @Override
-    public Long isValidMember(LoginRequestDto loginRequestDto) {
-        Member member = findByEmail(loginRequestDto.getEmail());
-        if (!passwordEncoder.matches(loginRequestDto.getPassword(), member.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        } else {
-            return member.getId();
-        }
-    }
-
     @Override
     public Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId).orElseThrow( () -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
     }
-    private Member findByEmail(String email) {
-        return memberRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-    }
+
 }

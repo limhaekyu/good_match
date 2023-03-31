@@ -13,9 +13,12 @@ import com.example.good_match.global.response.ApiResponseDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
+
+import javax.xml.ws.Response;
 
 @RestController
 @RequiredArgsConstructor
@@ -47,8 +50,8 @@ public class MemberController {
 
     @ApiOperation(value = "[회원] 아이디 찾기")
     @PostMapping("/find-id")
-    public ApiResponseDto<FindIdResponseDto> findId(@RequestBody FindIdRequestDto findIdRequestDto){
-        return memberService.findId(findIdRequestDto);
+    public ResponseEntity<FindIdResponseDto> findId(@RequestBody FindIdRequestDto findIdRequestDto){
+        return ResponseEntity.ok(memberService.findId(findIdRequestDto));
     }
 
     @ApiOperation(value = "[회원] 회원 탈퇴")

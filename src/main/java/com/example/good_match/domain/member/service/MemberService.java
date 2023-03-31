@@ -11,7 +11,7 @@ public interface MemberService {
 
     void signUpMember(SignUpRequestDto signUpRequestDto);
 
-    ApiResponseDto<FindIdResponseDto> findId(FindIdRequestDto findIdRequestDto);
+    FindIdResponseDto findId(FindIdRequestDto findIdRequestDto);
 
     ApiResponseDto deleteMember(Long memberId);
 

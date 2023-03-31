@@ -60,17 +60,15 @@ public class MemberServiceImpl implements MemberService {
         아이디 찾기
      */
 
-    public ApiResponseDto<FindIdResponseDto> findId(FindIdRequestDto findIdRequestDto) {
+    public FindIdResponseDto findId(FindIdRequestDto findIdRequestDto) {
         try {
             // 이름 비밀번호 일치여부확인 후 아이디 반환
             Member member = memberRepository.findByNameAndPhoneNumber(findIdRequestDto.getName(), findIdRequestDto.getPhoneNumber())
-                    .orElseThrow( () -> new IllegalArgumentException("일치하는 아이디가 없습니다.") );
+                    .orElseThrow( () -> new UsernameNotFoundException("일치하는 아이디가 없습니다.") );
 
-            return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "아이디 찾기에 성공했습니다.",
-                    FindIdResponseDto.builder().email(member.getEmail()).build()
-            );
+            return FindIdResponseDto.builder().email(member.getEmail()).build();
         } catch (Exception e){
-            return ApiResponseDto.of(ResponseStatusCode.FAIL.getValue(), "아이디 찾기에 실패했습니다. " + e.getMessage());
+            throw new IllegalArgumentException("아이디 찾기 실패! " + e.getMessage());
         }
     }
 

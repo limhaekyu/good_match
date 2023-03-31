@@ -9,7 +9,7 @@ import com.example.good_match.global.response.ApiResponseDto;
 
 public interface MemberService {
 
-    ApiResponseDto signUpMember(SignUpRequestDto signUpRequestDto);
+    void signUpMember(SignUpRequestDto signUpRequestDto);
 
     ApiResponseDto<FindIdResponseDto> findId(FindIdRequestDto findIdRequestDto);
 

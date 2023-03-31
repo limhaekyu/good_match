@@ -9,7 +9,9 @@ import com.example.good_match.domain.member.model.Member;
 import com.example.good_match.domain.member.repository.MemberRepository;
 import com.example.good_match.global.response.ApiResponseDto;
 import com.example.good_match.global.response.ResponseStatusCode;
+import com.nimbusds.oauth2.sdk.SuccessResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,14 +28,14 @@ public class MemberServiceImpl implements MemberService {
      */
 
     @Transactional
-    public ApiResponseDto signUpMember(SignUpRequestDto signUpRequestDto) {
+    public void signUpMember(SignUpRequestDto signUpRequestDto) {
         try {
             if (memberRepository.existsByPhoneNumber(signUpRequestDto.getPhoneNumber()) && memberRepository.existsByEmail(signUpRequestDto.getEmail())) {
-                return ApiResponseDto.of(ResponseStatusCode.REGISTERED.getValue(), "이미 등록된 사용자입니다.");
+                throw new DuplicateKeyException("이미 등록된 번호와 이메일입니다.");
             } else if(memberRepository.existsByEmail(signUpRequestDto.getEmail())) {
-                return ApiResponseDto.of(ResponseStatusCode.REGISTERED.getValue(), "이미 등록된 이메일입니다. ");
+                throw new DuplicateKeyException("이미 등록된 이메일입니다.");
             } else if(memberRepository.existsByPhoneNumber(signUpRequestDto.getPhoneNumber())) {
-                return ApiResponseDto.of(ResponseStatusCode.REGISTERED.getValue(), "이미 등록된 번호입니다.");
+                throw new DuplicateKeyException("이미 등록된 전화번호입니다.");
             } else {
                 String password = passwordEncoder.encode(signUpRequestDto.getPassword());
 
@@ -46,13 +48,10 @@ public class MemberServiceImpl implements MemberService {
                         .states(signUpRequestDto.getStates())
                         .authority(Authority.ROLE_USER)
                         .build();
-
                 memberRepository.save(member);
-
-                return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "회원가입에 성공했습니다");
             }
         } catch (Exception e){
-            return ApiResponseDto.of(ResponseStatusCode.FAIL.getValue(), "회원가입에 실패했습니다. " + e.getMessage());
+            throw new IllegalArgumentException("회원가입 실패! " + e.getMessage());
         }
     }
 

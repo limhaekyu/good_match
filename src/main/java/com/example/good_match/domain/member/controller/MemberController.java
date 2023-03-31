@@ -12,6 +12,7 @@ import com.example.good_match.global.annotation.LoginRequired;
 import com.example.good_match.global.response.ApiResponseDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +26,10 @@ public class MemberController {
     private final LoginService loginService;
 
     @ApiOperation(value = "[회원] 회원가입")
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/sign-up")
-    public ApiResponseDto signUp(@RequestBody SignUpRequestDto signUpRequestDto) {
-        return memberService.signUpMember(signUpRequestDto);
+    public void signUp(@RequestBody SignUpRequestDto signUpRequestDto) {
+        memberService.signUpMember(signUpRequestDto);
     }
 
     @ApiOperation(value = "[회원] 로그인")

@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import javax.security.auth.message.AuthException;
 
 @Service
@@ -27,9 +28,6 @@ public class PostServiceImpl implements PostService{
 
     private final CategoryService categoryService;
 
-    /*
-        [매칭] 게임 게시글 등록
-     */
     @Transactional
     public void insertPost(AddPostRequestDto addPostRequestDto, Long memberId) {
         try{
@@ -46,10 +44,6 @@ public class PostServiceImpl implements PostService{
         }
     }
 
-
-    /*
-        [매칭] 게임 게시글 상세 조회
-     */
     @Transactional(readOnly = true)
     public SelectPostDetailResponseDto selectPostDetail(Long id) {
         try {
@@ -69,11 +63,6 @@ public class PostServiceImpl implements PostService{
         }
     }
 
-
-    /*
-        [매칭] 게임 게시글 삭제
-     */
-
     @Transactional
     public void deletePost(Long id, Long memberId) {
         try {
@@ -89,18 +78,10 @@ public class PostServiceImpl implements PostService{
         }
     }
 
-
-    /*
-        [매칭] 게임 게시글 찾기 (with. index id)
-     */
-
-    private Post findPostById(Long id) {
-        return postRepository.findById(id).orElseThrow( ()-> new IllegalArgumentException("없는 게임 매칭 게시글입니다.") );
+    public Post findPostById(Long id) {
+        return postRepository.findById(id).orElseThrow( ()-> new EntityNotFoundException("없는 게임 매칭 게시글입니다.") );
     }
 
-    /*
-        [매칭] 게임 게시글 수정
-     */
     @Transactional
     public void updatePost(Long id, UpdatePostRequestDto updatePostRequestDto, Long memberId) {
         try {

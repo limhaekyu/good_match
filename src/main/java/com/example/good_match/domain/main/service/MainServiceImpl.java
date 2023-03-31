@@ -5,6 +5,7 @@ import com.example.good_match.domain.category.model.Category;
 import com.example.good_match.domain.category.model.SubCategory;
 import com.example.good_match.domain.category.repository.CategoryRepository;
 import com.example.good_match.domain.category.repository.SubCategoryRepository;
+import com.example.good_match.domain.category.service.CategoryService;
 import com.example.good_match.domain.main.dto.response.*;
 import com.example.good_match.domain.post.domain.Post;
 import com.example.good_match.domain.post.dto.response.PostWriterDto;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +32,8 @@ public class MainServiceImpl implements MainService {
 
     private final CategoryRepository categoryRepository;
     private final PostRepository postRepository;
-    private final SubCategoryRepository subCategoryRepository;
+
+    private final CategoryService categoryService;
 
     /*
         메인 데이터 반환 로직
@@ -56,7 +59,7 @@ public class MainServiceImpl implements MainService {
     @Override
     public MainPostsByCategoryResponseDto selectMainPostsBySubCategory(Long subCategoryId, Integer pageNumber) {
         Page<Post> postPage = postRepository.findAllBySubCategory(
-                subCategoryRepository.findById(subCategoryId).orElseThrow(()->new IllegalArgumentException("카테고리가 존재하지 않습니다.")),
+                categoryService.findSubCategoryById(subCategoryId),
                 PageRequest.of(pageNumber, 10, Sort.by("id").descending()));
         return MainPostsByCategoryResponseDto.builder()
                 .posts(makePostsByCategoryDto(postPage))

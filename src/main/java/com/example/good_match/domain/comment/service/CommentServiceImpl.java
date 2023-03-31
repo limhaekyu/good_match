@@ -8,6 +8,7 @@ import com.example.good_match.domain.comment.repository.CommentRepository;
 import com.example.good_match.domain.member.model.Authority;
 import com.example.good_match.domain.member.model.Member;
 import com.example.good_match.domain.member.service.MemberService;
+import com.example.good_match.domain.post.service.PostService;
 import com.example.good_match.global.response.ApiResponseDto;
 import com.example.good_match.global.response.ResponseStatusCode;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import javax.security.auth.message.AuthException;
 
 @Service
@@ -23,7 +25,8 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
 
     private final MemberService memberService;
-    private final PostRepository postRepository;
+
+    private final PostService postService;
 
     @Transactional
     public void insertComment(InsertCommentRequestDto insertCommentRequestDto, Long memberId) {
@@ -32,8 +35,7 @@ public class CommentServiceImpl implements CommentService {
                     Comment.builder()
                             .contents(insertCommentRequestDto.getContents())
                             .member(memberService.findMemberById(memberId))
-                            .post(postRepository.findById(insertCommentRequestDto.getPostId()).orElseThrow(
-                                    ()->new IllegalArgumentException("게시글을 찾을 수 없습니다.")))
+                            .post(postService.findPostById(insertCommentRequestDto.getPostId()))
                             .build()
             );
         } catch (Exception e){
@@ -70,7 +72,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private Comment findCommentById(Long commentId) {
-        return commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("해당 댓글을 찾을 수 없습니다."));
+        return commentRepository.findById(commentId).orElseThrow(() -> new EntityNotFoundException("해당 댓글을 찾을 수 없습니다."));
     }
 
 }

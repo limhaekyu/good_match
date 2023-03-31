@@ -21,6 +21,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,12 +90,12 @@ public class CategoryServiceImpl implements CategoryService{
     */
     @Override
     public Category findCategoryById(Long categoryId) {
-        return categoryRepository.findById(categoryId).orElseThrow(()-> new IllegalArgumentException("카테고리를 찾을 수 없습니다."));
+        return categoryRepository.findById(categoryId).orElseThrow(()-> new EntityNotFoundException("카테고리를 찾을 수 없습니다."));
     }
 
     @Override
     public SubCategory findSubCategoryById(Long subCategoryId) {
-        return subCategoryRepository.findById(subCategoryId).orElseThrow(() -> new IllegalArgumentException("해당 서브카테고리를 찾을 수 없습니다."));
+        return subCategoryRepository.findById(subCategoryId).orElseThrow(() -> new EntityNotFoundException("해당 서브카테고리를 찾을 수 없습니다."));
     }
 
     /*

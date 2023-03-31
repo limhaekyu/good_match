@@ -4,7 +4,7 @@ import com.example.good_match.domain.member.dto.request.LoginRequestDto;
 import com.example.good_match.global.response.ApiResponseDto;
 
 public interface LoginService {
-    ApiResponseDto login(Long memberId);
-    ApiResponseDto logout();
+    void login(LoginRequestDto loginRequest);
+    void logout();
     Long getCurrentMemberId();
 }

@@ -33,9 +33,8 @@ public class SessionLoginService implements LoginService{
     }
 
     @Override
-    public ApiResponseDto logout() {
+    public void logout() {
         httpSession.removeAttribute(MEMBER_ID);
-        return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "로그아웃 완료!");
     }
 
     @Override

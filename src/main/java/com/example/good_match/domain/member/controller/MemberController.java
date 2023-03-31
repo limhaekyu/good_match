@@ -42,9 +42,10 @@ public class MemberController {
     }
 
     @ApiOperation(value = "[회원] 로그아웃")
+    @LoginRequired
     @PostMapping("/logout")
-    public ApiResponseDto logout() {
-        return loginService.logout();
+    public void logout() {
+        loginService.logout();
     }
 
     @ApiOperation(value = "[회원] 아이디 찾기")

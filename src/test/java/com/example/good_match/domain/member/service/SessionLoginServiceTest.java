@@ -59,6 +59,11 @@ class SessionLoginServiceTest {
     @Test
     @DisplayName("[회원] 로그아웃 테스트")
     void logout() {
+        httpSession.setAttribute(MEMBER_ID, 1L);
+
+        loginService.logout();
+
+        verify(httpSession).removeAttribute(MEMBER_ID);
     }
 
 }

@@ -5,6 +5,6 @@ import com.example.good_match.global.response.ApiResponseDto;
 
 public interface LoginService {
     void login(LoginRequestDto loginRequest);
-    ApiResponseDto logout();
+    void logout();
     Long getCurrentMemberId();
 }

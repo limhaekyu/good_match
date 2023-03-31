@@ -56,8 +56,9 @@ public class MemberController {
 
     @ApiOperation(value = "[회원] 회원 탈퇴")
     @LoginRequired
+    @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/member")
-    public ApiResponseDto deleteMember(@CurrentMemberId Long memberId) {
-        return memberService.deleteMember(memberId);
+    public void deleteMember(@CurrentMemberId Long memberId) {
+        memberService.deleteMember(memberId);
     }
 }

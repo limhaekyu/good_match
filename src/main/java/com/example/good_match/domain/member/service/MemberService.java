@@ -13,7 +13,7 @@ public interface MemberService {
 
     FindIdResponseDto findId(FindIdRequestDto findIdRequestDto);
 
-    ApiResponseDto deleteMember(Long memberId);
+    void deleteMember(Long memberId);
 
     Long isValidMember(LoginRequestDto loginRequestDto);
 

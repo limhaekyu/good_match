@@ -1,12 +1,14 @@
 package com.example.good_match.domain.member.service;
 
 import com.example.good_match.domain.member.dto.request.FindIdRequestDto;
+import com.example.good_match.domain.member.dto.request.LoginRequestDto;
 import com.example.good_match.domain.member.dto.request.SignUpRequestDto;
 import com.example.good_match.domain.member.dto.response.FindIdResponseDto;
 import com.example.good_match.domain.member.model.Gender;
 import com.example.good_match.domain.member.model.Member;
 import com.example.good_match.domain.member.repository.MemberRepository;
 import com.example.good_match.global.util.StatesEnum;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,6 +34,7 @@ class MemberServiceImplTest {
 
 
     @Test
+    @DisplayName("[회원] 회원가입 테스트")
     void signUpMember() {
         SignUpRequestDto signUpRequest = SignUpRequestDto.builder()
                 .email("test@gmail.com")
@@ -51,6 +55,7 @@ class MemberServiceImplTest {
     }
 
     @Test
+    @DisplayName("[회원] 아이디 찾기 테스트")
     void findId() {
         String name = "LIM";
         String phoneNumber = "010-1234-1234";
@@ -70,15 +75,29 @@ class MemberServiceImplTest {
         assertEquals(result.getEmail(), findIdResponse.getEmail());
     }
 
-    @Test
-    void deleteMember() {
-    }
 
     @Test
+    @DisplayName("[회원] 회원 검증 테스트")
     void isValidMember() {
+        String email = "lim@gmail.com";
+        String password = "123123";
+        String encodedPassword = passwordEncoder.encode(password);
+        Member member = Member.builder()
+                .id(1L)
+                .email(email)
+                .password(encodedPassword)
+                .build();
+
+        LoginRequestDto loginRequest = new LoginRequestDto(email, password);
+
+        when(memberRepository.findByEmail(loginRequest.getEmail())).thenReturn(Optional.of(member));
+        when(passwordEncoder.matches(loginRequest.getPassword(), member.getPassword())).thenReturn(true);
+
+        Long result = memberService.isValidMember(loginRequest);
+
+        assertEquals(result, 1L);
+
+
     }
 
-    @Test
-    void findMemberById() {
-    }
 }

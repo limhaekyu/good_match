@@ -76,13 +76,12 @@ public class MemberServiceImpl implements MemberService {
         회원 탈퇴
     */
     @Transactional
-    public ApiResponseDto deleteMember(Long memberId) {
+    public void deleteMember(Long memberId) {
         try {
             Member member = findMemberById(memberId);
             member.deleteMember();
-            return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "회원 탈퇴를 성공했습니다.");
         } catch (Exception e) {
-            return ApiResponseDto.of(ResponseStatusCode.INTERNAL_SERVER_ERROR.getValue(), "회원 탈퇴에 실패했습니다. " + e.getMessage());
+            throw new IllegalArgumentException("회원탈퇴 실패! " + e.getMessage());
         }
     }
 

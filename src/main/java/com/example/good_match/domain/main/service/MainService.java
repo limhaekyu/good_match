@@ -7,7 +7,7 @@ import com.example.good_match.global.util.StatesEnum;
 
 public interface MainService {
 
-    ApiResponseDto<MainResponseDto> selectMainInfo();
+    MainResponseDto selectMainInfo();
 
     MainPostsByCategoryResponseDto selectMainPostsBySubCategory(Long subCategoryId, Integer pageNumber);
 }

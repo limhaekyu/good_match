@@ -9,6 +9,7 @@ import com.example.good_match.domain.member.model.Member;
 import com.example.good_match.domain.member.service.MemberService;
 import com.example.good_match.domain.post.domain.Post;
 import com.example.good_match.domain.post.repository.PostRepository;
+import com.example.good_match.domain.post.service.PostService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +31,7 @@ class CommentServiceImplTest {
     @Mock
     private MemberService memberService;
     @Mock
-    private PostRepository postRepository;
+    private PostService postService;
     @InjectMocks
     private CommentServiceImpl commentService;
 
@@ -55,7 +56,7 @@ class CommentServiceImplTest {
                 .build();
 
         when(memberService.findMemberById(memberId)).thenReturn(member);
-        when(postRepository.findById(insertCommentRequest.getPostId())).thenReturn(Optional.ofNullable(post));
+        when(postService.findPostById(insertCommentRequest.getPostId())).thenReturn(post);
 
         commentService.insertComment(insertCommentRequest, memberId);
 

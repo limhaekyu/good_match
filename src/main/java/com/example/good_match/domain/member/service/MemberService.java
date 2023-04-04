@@ -9,13 +9,11 @@ import com.example.good_match.global.response.ApiResponseDto;
 
 public interface MemberService {
 
-    ApiResponseDto signUpMember(SignUpRequestDto signUpRequestDto);
+    void signUpMember(SignUpRequestDto signUpRequestDto);
 
-    ApiResponseDto<FindIdResponseDto> findId(FindIdRequestDto findIdRequestDto);
+    FindIdResponseDto findId(FindIdRequestDto findIdRequestDto);
 
-    ApiResponseDto deleteMember(Long memberId);
-
-    Long isValidMember(LoginRequestDto loginRequestDto);
+    void deleteMember(Long memberId);
 
     Member findMemberById(Long memberId);
 }

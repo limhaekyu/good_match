@@ -8,6 +8,7 @@ import com.example.good_match.domain.comment.repository.CommentRepository;
 import com.example.good_match.domain.member.model.Authority;
 import com.example.good_match.domain.member.model.Member;
 import com.example.good_match.domain.member.service.MemberService;
+import com.example.good_match.domain.post.service.PostService;
 import com.example.good_match.global.response.ApiResponseDto;
 import com.example.good_match.global.response.ResponseStatusCode;
 import lombok.RequiredArgsConstructor;
@@ -15,66 +16,63 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
+import javax.security.auth.message.AuthException;
+
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
 
     private final MemberService memberService;
-    private final PostRepository postRepository;
+
+    private final PostService postService;
 
     @Transactional
-    public ApiResponseDto insertComment(InsertCommentRequestDto insertCommentRequestDto, Long memberId) {
+    public void insertComment(InsertCommentRequestDto insertCommentRequestDto, Long memberId) {
         try {
             commentRepository.save(
                     Comment.builder()
                             .contents(insertCommentRequestDto.getContents())
                             .member(memberService.findMemberById(memberId))
-                            .post(postRepository.findById(insertCommentRequestDto.getPostId()).orElseThrow(
-                                    ()->new IllegalArgumentException("게시글을 찾을 수 없습니다.")))
+                            .post(postService.findPostById(insertCommentRequestDto.getPostId()))
                             .build()
             );
-            return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "댓글 작성 성공!");
         } catch (Exception e){
-            return ApiResponseDto.of(ResponseStatusCode.FAIL.getValue(), "댓글 작성 실패! "+e.getMessage());
+            throw new IllegalArgumentException("댓글 작성 실패! " + e.getMessage());
         }
     }
 
     @Transactional
-    public ApiResponseDto updateComment(Long memberId, Long commentId, UpdateCommentRequestDto updateCommentRequestDto) {
+    public void updateComment(Long memberId, Long commentId, UpdateCommentRequestDto updateCommentRequestDto) {
         try {
-            Comment comment = this.findCommentById(commentId);
-            if (comment.getMember().equals(memberService.findMemberById(memberId))){
-                comment.update(
-                        updateCommentRequestDto.getContents()
-                );
+            Comment comment = findCommentById(commentId);
+            if (comment.eqMember(memberService.findMemberById(memberId))){
+                comment.update(updateCommentRequestDto.getContents());
             }
-            return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "댓글 수정 성공!");
         } catch (Exception e) {
-            return ApiResponseDto.of(ResponseStatusCode.FAIL.getValue(), "댓글 수정 실패! " + e.getMessage());
+            throw new IllegalArgumentException("댓글 수정 실패! " + e.getMessage());
         }
     }
 
     @Transactional
-    public ApiResponseDto cancelComment(Long memberId, Long commentId) {
+    public void cancelComment(Long memberId, Long commentId) {
         try {
-            Comment comment = this.findCommentById(commentId);
+            Comment comment = findCommentById(commentId);
             Member member = memberService.findMemberById(memberId);
 
-            if (member.getAuthority() == Authority.ROLE_ADMIN || member.equals(comment.getMember())) {
+            if (member.isAdmin() || comment.eqMember(member)) {
                 commentRepository.delete(comment);
-                return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), "댓글 삭제 성공!");
             } else {
-                return ApiResponseDto.of(ResponseStatusCode.FORBIDDEN.getValue(), "댓글 삭제 실패! (삭제 권한이 없습니다)");
+                throw new AuthException("댓글 삭제 실패!, 권한이 없습니다. ");
             }
-
         } catch(Exception e) {
-            return ApiResponseDto.of(ResponseStatusCode.FAIL.getValue(), "댓글 삭제 실패! " + e.getMessage());
+            throw new IllegalArgumentException("댓글 삭제 실패! " + e.getMessage());
         }
     }
 
-    public Comment findCommentById(Long commentId) {
-        return commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("해당 댓글을 찾을 수 없습니다."));
+    private Comment findCommentById(Long commentId) {
+        return commentRepository.findById(commentId).orElseThrow(() -> new EntityNotFoundException("해당 댓글을 찾을 수 없습니다."));
     }
 
 }

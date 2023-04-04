@@ -4,15 +4,12 @@ import com.example.good_match.domain.category.dto.response.CategoryInfoDto;
 import com.example.good_match.domain.category.model.Category;
 import com.example.good_match.domain.category.model.SubCategory;
 import com.example.good_match.domain.category.repository.CategoryRepository;
-import com.example.good_match.domain.category.repository.SubCategoryRepository;
+import com.example.good_match.domain.category.service.CategoryService;
 import com.example.good_match.domain.main.dto.response.*;
 import com.example.good_match.domain.post.domain.Post;
 import com.example.good_match.domain.post.dto.response.PostWriterDto;
 import com.example.good_match.domain.post.mapper.PostMapper;
 import com.example.good_match.domain.post.repository.PostRepository;
-import com.example.good_match.global.response.ApiResponseDto;
-import com.example.good_match.global.response.ResponseStatusCode;
-import com.example.good_match.global.util.StatesEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,33 +27,26 @@ public class MainServiceImpl implements MainService {
 
     private final CategoryRepository categoryRepository;
     private final PostRepository postRepository;
-    private final SubCategoryRepository subCategoryRepository;
+    private final CategoryService categoryService;
 
-    /*
-        메인 데이터 반환 로직
-        카테고리, 최신 게시글 10개
-    */
     @Transactional(readOnly = true)
     @Override
-    public ApiResponseDto<MainResponseDto> selectMainInfo() {
+    public MainResponseDto selectMainInfo() {
         try {
-            MainResponseDto mainResponse = MainResponseDto.builder()
+            return MainResponseDto.builder()
                     .categories(selectCategoryList())
                     .posts(selectRecentPosts())
                     .build();
-            return ApiResponseDto.of(ResponseStatusCode.SUCCESS.getValue(), " 메인 조회 성공! " ,mainResponse);
         } catch (Exception e) {
-            return ApiResponseDto.of(ResponseStatusCode.INTERNAL_SERVER_ERROR.getValue(), e.getMessage());
+            throw new IllegalArgumentException("메인 데이터 반환 실패! " + e.getMessage());
         }
     }
-    /*
-        메인페이지 카테고리별 Paging 된 게시글 조회
-     */
+
     @Transactional(readOnly = true)
     @Override
     public MainPostsByCategoryResponseDto selectMainPostsBySubCategory(Long subCategoryId, Integer pageNumber) {
         Page<Post> postPage = postRepository.findAllBySubCategory(
-                subCategoryRepository.findById(subCategoryId).orElseThrow(()->new IllegalArgumentException("카테고리가 존재하지 않습니다.")),
+                categoryService.findSubCategoryById(subCategoryId),
                 PageRequest.of(pageNumber, 10, Sort.by("id").descending()));
         return MainPostsByCategoryResponseDto.builder()
                 .posts(makePostsByCategoryDto(postPage))
@@ -64,17 +54,11 @@ public class MainServiceImpl implements MainService {
                 .build();
     }
 
-    /*
-        최근 게시글
-     */
     private List<PostResponseDto> selectRecentPosts() {
         List<Post> posts = postRepository.findRecentPosts(Pageable.ofSize(7));
         return PostMapper.INSTANCE.toDtoList(posts);
     }
 
-    /*
-        카테고리/sub 카테고리 별 게시글 조회
-     */
     private List<PostsByCategoryResponseDto> makePostsByCategoryDto(Page<Post> posts) {
         List<PostsByCategoryResponseDto> postsDto = new ArrayList<>();
         for (Post post : posts) {
@@ -98,9 +82,6 @@ public class MainServiceImpl implements MainService {
         return postsDto;
     }
 
-    /*
-        카테고리 리스트 조회
-     */
     private List<CategoryResponseDto> selectCategoryList(){
         List<Category> categories = categoryRepository.findAll();
         List<CategoryResponseDto> mainCategories = new ArrayList<>();
@@ -114,9 +95,6 @@ public class MainServiceImpl implements MainService {
         return mainCategories;
     }
 
-    /*
-        sub 카테고리 리스트 생성
-     */
     private List<MainSubCategoryDto> makeSubCategoryDto(List<SubCategory> subCategories) {
         List<MainSubCategoryDto> mainSubCategories = new ArrayList<>();
         for (SubCategory subCategory : subCategories) {

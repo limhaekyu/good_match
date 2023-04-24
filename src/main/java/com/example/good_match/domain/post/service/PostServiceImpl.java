@@ -1,9 +1,6 @@
 package com.example.good_match.domain.post.service;
 
-import com.example.good_match.domain.category.repository.CategoryRepository;
-import com.example.good_match.domain.category.repository.SubCategoryRepository;
 import com.example.good_match.domain.category.service.CategoryService;
-import com.example.good_match.domain.member.model.Authority;
 import com.example.good_match.domain.member.model.Member;
 import com.example.good_match.domain.member.service.MemberService;
 import com.example.good_match.domain.post.domain.Post;
@@ -11,8 +8,6 @@ import com.example.good_match.domain.post.dto.request.AddPostRequestDto;
 import com.example.good_match.domain.post.dto.request.UpdatePostRequestDto;
 import com.example.good_match.domain.post.dto.response.SelectPostDetailResponseDto;
 import com.example.good_match.domain.post.repository.PostRepository;
-import com.example.good_match.global.response.ApiResponseDto;
-import com.example.good_match.global.response.ResponseStatusCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -89,7 +84,6 @@ public class PostServiceImpl implements PostService{
             Member member = memberService.findMemberById(memberId);
             if (post.eqMember(member) || member.isAdmin()) {
                 post.updatePost(updatePostRequestDto.getTitle(), updatePostRequestDto.getContents(), updatePostRequestDto.getStates());
-                postRepository.save(post);
             } else {
                 throw new AuthException("수정 권한이 없습니다.");
             }

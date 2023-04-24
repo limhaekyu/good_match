@@ -118,9 +118,11 @@ class PostServiceImplTest {
     @Test
     @DisplayName("[게시글] 수정")
     void updatePost() {
+        String updateTitle = "테스트 수정 제목";
+        String updateContents = "테스트 수정 내용";
         UpdatePostRequestDto updatePostRequestDto = UpdatePostRequestDto.builder()
-                .title("테스트 수정 제목")
-                .contents("테스트 수정 내용")
+                .title(updateTitle)
+                .contents(updateContents)
                 .states(StatesEnum.BUSAN)
                 .build();
         Long postId = 1L;
@@ -135,6 +137,8 @@ class PostServiceImplTest {
         postService.updatePost(postId, updatePostRequestDto, memberId);
 
         // Assert
-        verify(postRepository, times(1)).save(post);
+        assertEquals(updateTitle, postRepository.findById(postId).get().getTitle());
+        assertEquals(updateContents, postRepository.findById(postId).get().getContents());
+
     }
 }

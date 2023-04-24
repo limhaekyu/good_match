@@ -29,7 +29,6 @@ public class PostController {
     }
 
     @ApiOperation(value = "[게시글] 게시글 상세조회")
-    @LoginRequired
     @GetMapping("/{id}")
     public ResponseEntity<SelectPostDetailResponseDto> selectPostDetail(@PathVariable Long id){
         return ResponseEntity.ok().body(postService.selectPostDetail(id));

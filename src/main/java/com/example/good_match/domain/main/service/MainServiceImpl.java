@@ -56,7 +56,18 @@ public class MainServiceImpl implements MainService {
 
     private List<PostResponseDto> selectRecentPosts() {
         List<Post> posts = postRepository.findRecentPosts(Pageable.ofSize(7));
-        return PostMapper.INSTANCE.toDtoList(posts);
+        List<PostResponseDto> responsePosts = new ArrayList<>();
+        posts.forEach((post) -> {
+            responsePosts.add(PostResponseDto.builder()
+                            .id(post.getId())
+                            .title(post.getTitle())
+                            .states(post.getStates())
+                            .writerId(post.getMember().getId())
+                            .writerName(post.getMember().getName())
+                            .updatedAt(post.getUpdatedAt())
+                    .build());
+        });
+        return responsePosts;
     }
 
     private List<PostsByCategoryResponseDto> makePostsByCategoryDto(Page<Post> posts) {

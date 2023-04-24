@@ -1,5 +1,6 @@
 package com.example.good_match.domain.main.dto.response;
 
+import com.example.good_match.domain.post.dto.response.PostWriterDto;
 import com.example.good_match.global.util.StatesEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +20,10 @@ public class PostResponseDto {
     private String title;
 
     private StatesEnum states;
+
+    private Long writerId;
+
+    private String writerName;
 
     private LocalDateTime updatedAt;
 }
